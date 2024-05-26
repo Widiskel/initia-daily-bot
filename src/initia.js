@@ -70,6 +70,7 @@ async function claimExp() {
       initia.bcs.u64().serialize(50).toBase64(),
       initia.bcs.u64().serialize(referalPoint.referral_point).toBase64(),
     ];
+    console.log(msg);
     // [
     //     STAGE
     //     UNKNOWN
@@ -113,12 +114,4 @@ async function signAndBroadcast(msg) {
   }
 }
 
-export {
-  chainId,
-  lcd,
-  minGasPrice,
-  initiation,
-  queryBalance,
-  claimExp,
-  sendToken,
-};
+export { initiation, queryBalance, claimExp, sendToken };
