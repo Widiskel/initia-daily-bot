@@ -189,7 +189,7 @@ async function swap() {
 
 async function signAndBroadcast(msg) {
   try {
-    console.log(msg);
+    // console.log(msg);
     const signedTx = await wallet.createAndSignTx({
       msgs: [msg],
     });
