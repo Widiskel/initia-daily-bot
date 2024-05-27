@@ -18,7 +18,7 @@ async function swap() {
   try {
     await initia.swap();
   } catch (error) {
-    console.log("Error during swaping initia : ", error);
+    console.log("Error during swaping initia : ", error.response.data.message);
   }
 }
 

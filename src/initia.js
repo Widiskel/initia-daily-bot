@@ -121,16 +121,21 @@ async function swap() {
       [],
       args
     );
-    args.push(initia.bcs.u64().serialize(initToUsdcSimulation).toBase64());
+
+    args.push(
+      initia.bcs
+        .option(initia.bcs.u64())
+        .serialize(initToUsdcSimulation)
+        .toBase64()
+    );
 
     const initiaToUsdcMsg = new initia.MsgExecute();
     initiaToUsdcMsg.function_name = "swap_script";
     initiaToUsdcMsg.module_address = "0x1";
     initiaToUsdcMsg.module_name = "dex";
     initiaToUsdcMsg.sender = address;
-    initiaToUsdcMsg.type_args = [];
     initiaToUsdcMsg.args = args;
-    // console.log(initiaToUsdcMsg);
+    console.log(initiaToUsdcMsg);
     await signAndBroadcast(initiaToUsdcMsg);
     console.log(
       `Successfully Swap 1 Init To ${initToUsdcSimulation / 1000000} USDC`
@@ -155,7 +160,12 @@ async function swap() {
       [],
       args
     );
-    args.push(initia.bcs.u64().serialize(usdcToInitSimulation).toBase64());
+    args.push(
+      initia.bcs
+        .option(initia.bcs.u64())
+        .serialize(usdcToInitSimulation)
+        .toBase64()
+    );
 
     const usdcToInitiaMsg = new initia.MsgExecute();
     usdcToInitiaMsg.function_name = "swap_script";
@@ -179,6 +189,7 @@ async function swap() {
 
 async function signAndBroadcast(msg) {
   try {
+    console.log(msg);
     const signedTx = await wallet.createAndSignTx({
       msgs: [msg],
     });
