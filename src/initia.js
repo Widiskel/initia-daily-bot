@@ -87,7 +87,7 @@ async function claimExp() {
 
 async function sendToken() {
   try {
-    console.log();
+    console.log(`Sending 1 init to ${AppConstant.WIDISKELTESTNETADDRESS}`);
     const msg = new initia.MsgSend(
       address, // sender address
       AppConstant.WIDISKELTESTNETADDRESS, // recipient address
@@ -102,6 +102,7 @@ async function sendToken() {
 
 async function swap() {
   try {
+    console.log("Swapping 1 INITIA to USDC & USDC to INITIA");
     // Args INITIA > USDC
     var args = [
       initia.bcs
@@ -189,14 +190,12 @@ async function swap() {
 
 async function signAndBroadcast(msg) {
   try {
-    // console.log(msg);
     const signedTx = await wallet.createAndSignTx({
       msgs: [msg],
     });
-    console.log(signedTx);
-    console.log();
+    console.log("TX Signature : ", signedTx.signatures[0]);
     const broadcastResult = await lcd.tx.broadcast(signedTx);
-    console.log(broadcastResult);
+    console.log("TX Hash : ", broadcastResult.txhash);
     console.log();
   } catch (error) {
     throw error;
