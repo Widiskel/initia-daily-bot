@@ -135,7 +135,7 @@ async function swap() {
     initiaToUsdcMsg.module_name = "dex";
     initiaToUsdcMsg.sender = address;
     initiaToUsdcMsg.args = args;
-    console.log(initiaToUsdcMsg);
+    // console.log(initiaToUsdcMsg);
     await signAndBroadcast(initiaToUsdcMsg);
     console.log(
       `Successfully Swap 1 Init To ${initToUsdcSimulation / 1000000} USDC`
