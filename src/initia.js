@@ -43,6 +43,7 @@ async function queryBalance() {
         }`
       );
     });
+
     console.log();
     return balances[0]._coins.uinit;
   } catch (error) {
