@@ -29,7 +29,7 @@ async function doQuest(walletAddress, privateKey) {
                   await routine.sendOneInitToOther();
                 }
                 console.log(
-                  "2. Swap 1 INIT to USDC for Account" + +walletAddress
+                  "2. Swap 1 INIT to USDC for Account" + walletAddress
                 );
                 console.log();
                 for (let swap = 0; swap < TOTALSWAP; swap++) {

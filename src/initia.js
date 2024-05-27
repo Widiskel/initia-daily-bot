@@ -103,7 +103,9 @@ async function sendToken() {
 
 async function swap() {
   try {
-    console.log("Swapping 1 INITIA to USDC & USDC to INITIA");
+    console.log(
+      "Swapping 1 INITIA to USDC & USDC to INITIA for Account " + address
+    );
     // Args INITIA > USDC
     var args = [
       initia.bcs
@@ -140,7 +142,9 @@ async function swap() {
     // console.log(initiaToUsdcMsg);
     await signAndBroadcast(initiaToUsdcMsg);
     console.log(
-      `Successfully Swap 1 Init To ${initToUsdcSimulation / 1000000} USDC`
+      `Successfully Swap 1 Init To ${
+        initToUsdcSimulation / 1000000
+      } USDC for Address : ${address}`
     );
 
     // Args USDC > INIT
@@ -182,7 +186,7 @@ async function swap() {
     console.log(
       `Successfully Swap ${initToUsdcSimulation / 1000000} To ${
         usdcToInitSimulation / 1000000
-      } INIT`
+      } INIT for Address : ${address}`
     );
   } catch (error) {
     throw error;
