@@ -27,7 +27,7 @@ const TOTALSWAP = 10;
           await routine.sendOneInitToOther();
         }
         console.log("2. Swap 1 INIT to USDC");
-        for (let swap = 0; swap < TOTALSEND; swap++) {
+        for (let swap = 0; swap < TOTALSWAP; swap++) {
           await routine.swap();
         }
 
