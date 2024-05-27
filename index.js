@@ -10,18 +10,19 @@ async function doQuest(walletAddress, privateKey) {
       await initia.initiation(walletAddress, privateKey);
       console.log(`Account ${walletAddress} Information`);
       const initBalance = await initia.queryBalance();
-
       console.log();
-      console.log("Doing daily routine");
+      console.log("Doing daily routine for Account " + walletAddress);
       if (initBalance.amount / 1000000 < 20) {
-        reject("Balance < 20 Initia, Please request initia token from faucet");
+        reject(
+          `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
+        );
       } else {
-        console.log("1. Send 1 Init to Other");
+        console.log("1. Send 1 Init to Other for Account" + walletAddress);
         console.log();
         for (let send = 0; send < TOTALSEND; send++) {
           await routine.sendOneInitToOther();
         }
-        console.log("2. Swap 1 INIT to USDC");
+        console.log("2. Swap 1 INIT to USDC for Account" + +walletAddress);
         console.log();
         for (let swap = 0; swap < TOTALSWAP; swap++) {
           await routine.swap();
