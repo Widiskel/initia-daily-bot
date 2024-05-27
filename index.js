@@ -21,8 +21,12 @@ import { account } from "./src/account.js";
       } else {
         await routine.sendOneInitToOther();
       }
-      console.log("2. Claim EXP");
-      await routine.claimExp();
+
+      console.log("2. Swap 1 INIT to USDC");
+      await routine.swap();
+
+      // console.log("3. Claim EXP");
+      // await routine.claimExp();
     });
   } catch (error) {
     console.log("Error During executing bot", error);

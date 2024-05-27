@@ -1,5 +1,6 @@
 import * as initia from "@initia/initia.js";
 import * as initiaRepo from "./repository/initia_repo.js";
+import { AppConstant } from "./utils/constant.js";
 
 let lcd;
 let chainId;
@@ -57,7 +58,7 @@ async function claimExp() {
 
     const msg = new initia.MsgExecute();
     msg.function_name = "claim_point";
-    msg.module_address = "0x9065fda28f52bb14ade545411f02e8e07a9cb4ba";
+    msg.module_address = AppConstant.CLAIMPOINTMODULEADDRESS;
     msg.module_name = "initia_xp";
     msg.sender = address;
     msg.type_args = [];
@@ -89,11 +90,88 @@ async function sendToken() {
     console.log();
     const msg = new initia.MsgSend(
       address, // sender address
-      "init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp", // recipient address
+      AppConstant.WIDISKELTESTNETADDRESS, // recipient address
       "1000000uinit" // 1 Init
     );
 
     await signAndBroadcast(msg);
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function swap() {
+  try {
+    // Args INITIA > USDC
+    var args = [
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
+        .toBase64(),
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIAMETADATAADDRESS)
+        .toBase64(),
+      initia.bcs.u64().serialize(1000000).toBase64(), // 1 INITIA
+    ];
+    const initToUsdcSimulation = await lcd.move.viewFunction(
+      "0x1",
+      "dex",
+      "get_swap_simulation",
+      [],
+      args
+    );
+    args.push(initia.bcs.u64().serialize(initToUsdcSimulation).toBase64());
+
+    const initiaToUsdcMsg = new initia.MsgExecute();
+    initiaToUsdcMsg.function_name = "swap_script";
+    initiaToUsdcMsg.module_address = "0x1";
+    initiaToUsdcMsg.module_name = "dex";
+    initiaToUsdcMsg.sender = address;
+    initiaToUsdcMsg.type_args = [];
+    initiaToUsdcMsg.args = args;
+    // console.log(initiaToUsdcMsg);
+    await signAndBroadcast(initiaToUsdcMsg);
+    console.log(
+      `Successfully Swap 1 Init To ${initToUsdcSimulation / 1000000} USDC`
+    );
+
+    // Args USDC > INIT
+    args = [
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
+        .toBase64(),
+      initia.bcs
+        .address()
+        .serialize(AppConstant.USDCMETADATAADDRESS)
+        .toBase64(),
+      initia.bcs.u64().serialize(initToUsdcSimulation).toBase64(), // SWAPPED USDC
+    ];
+    const usdcToInitSimulation = await lcd.move.viewFunction(
+      "0x1",
+      "dex",
+      "get_swap_simulation",
+      [],
+      args
+    );
+    args.push(initia.bcs.u64().serialize(usdcToInitSimulation).toBase64());
+
+    const usdcToInitiaMsg = new initia.MsgExecute();
+    usdcToInitiaMsg.function_name = "swap_script";
+    usdcToInitiaMsg.module_address = "0x1";
+    usdcToInitiaMsg.module_name = "dex";
+    usdcToInitiaMsg.sender = address;
+    usdcToInitiaMsg.type_args = [];
+    usdcToInitiaMsg.args = args;
+    // console.log(usdcToInitiaMsg);
+
+    await signAndBroadcast(usdcToInitiaMsg);
+    console.log(
+      `Successfully Swap ${initToUsdcSimulation / 1000000} To ${
+        usdcToInitSimulation / 1000000
+      } INIT`
+    );
   } catch (error) {
     throw error;
   }
@@ -114,4 +192,4 @@ async function signAndBroadcast(msg) {
   }
 }
 
-export { initiation, queryBalance, claimExp, sendToken };
+export { initiation, queryBalance, claimExp, sendToken, swap };

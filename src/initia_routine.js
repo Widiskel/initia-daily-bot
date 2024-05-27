@@ -14,5 +14,12 @@ async function claimExp() {
     console.log("Error during claiming exp : ", error.response.data.message);
   }
 }
+async function swap() {
+  try {
+    await initia.swap();
+  } catch (error) {
+    console.log("Error during swaping initia : ", error);
+  }
+}
 
-export { sendOneInitToOther, claimExp };
+export { sendOneInitToOther, claimExp, swap };
