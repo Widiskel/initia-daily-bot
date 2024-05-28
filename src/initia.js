@@ -230,7 +230,6 @@ async function stakeInit() {
     msg.delegator_address = address;
     msg.amount = initia.Coins.fromString("100000uinit");
     msg.validator_address = AppConstant.OMNINODEVALIDATORADDRESS;
-    console.log(msg);
 
     await signAndBroadcast(msg)
       .then(() => {
