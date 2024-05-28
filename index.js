@@ -1,8 +1,6 @@
 import * as initia from "./src/initia.js";
 import * as routine from "./src/initia_routine.js";
 import { account } from "./src/account.js";
-const TOTALSEND = 5;
-const TOTALSWAP = 5;
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -16,29 +14,32 @@ async function doQuest(walletAddress, privateKey) {
               console.log(`Account ${walletAddress} Information`);
               console.log();
               console.log("Doing daily routine for Account " + walletAddress);
-              if (initBalance.amount / 1000000 < 20) {
+              if (initBalance.amount / 1000000 < 10) {
                 reject(
-                  `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
+                  `Balance < 10 Initia for account ${walletAddress}, Please request initia token from faucet `
                 );
               } else {
                 console.log(
                   "1. Send 1 Init to Other for Account" + walletAddress
                 );
+                await routine.sendOneInitToOther();
                 console.log();
-                for (let send = 0; send < TOTALSEND; send++) {
-                  await routine.sendOneInitToOther();
-                }
+
                 console.log(
                   "2. Swap 1 INIT to USDC for Account" + walletAddress
                 );
+                await routine.swap();
                 console.log();
-                for (let swap = 0; swap < TOTALSWAP; swap++) {
-                  await routine.swap();
-                }
+
+                console.log(
+                  "3. Stake 0.1 INIT to Omninode Account" + walletAddress
+                );
+                await routine.stakeInit();
+                console.log();
 
                 // console.log("3. Claim EXP");
                 // await routine.claimExp();
-                resolve();
+                resolve(true);
               }
             })
             .then((error) => reject(error));

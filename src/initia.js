@@ -95,7 +95,15 @@ async function sendToken() {
       "1000000uinit" // 1 Init
     );
 
-    await signAndBroadcast(msg);
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Send 1 Init To ${AppConstant.WIDISKELTESTNETADDRESS}`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
   } catch (error) {
     throw error;
   }
@@ -140,12 +148,17 @@ async function swap() {
     initiaToUsdcMsg.sender = address;
     initiaToUsdcMsg.args = args;
     // console.log(initiaToUsdcMsg);
-    await signAndBroadcast(initiaToUsdcMsg);
-    console.log(
-      `Successfully Swap 1 Init To ${
-        initToUsdcSimulation / 1000000
-      } USDC for Address : ${address}`
-    );
+    await signAndBroadcast(initiaToUsdcMsg)
+      .then(() => {
+        console.log(
+          `Successfully Swap 1 Init To ${
+            initToUsdcSimulation / 1000000
+          } USDC for Address : ${address}`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
 
     // Args USDC > INIT
     args = [
@@ -182,12 +195,52 @@ async function swap() {
     usdcToInitiaMsg.args = args;
     // console.log(usdcToInitiaMsg);
 
-    await signAndBroadcast(usdcToInitiaMsg);
-    console.log(
-      `Successfully Swap ${initToUsdcSimulation / 1000000} To ${
-        usdcToInitSimulation / 1000000
-      } INIT for Address : ${address}`
-    );
+    await signAndBroadcast(usdcToInitiaMsg)
+      .then(() => {
+        console.log(
+          `Successfully Swap ${initToUsdcSimulation / 1000000} To ${
+            usdcToInitSimulation / 1000000
+          } INIT for Address : ${address}`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+async function stakeInit() {
+  try {
+    console.log("Stake 0.1 INITIA to OmniNode for Account " + address);
+    // Args INITIA > USDC
+    var args = [
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
+        .toBase64(),
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIAMETADATAADDRESS)
+        .toBase64(),
+      initia.bcs.u64().serialize(1000000).toBase64(), // 1 INITIA
+    ];
+
+    const msg = new initia.MsgDelegate();
+    msg.delegator_address = address;
+    msg.amount = initia.Coins.fromString("100000uinit");
+    msg.validator_address = AppConstant.OMNINODEVALIDATORADDRESS;
+    console.log(msg);
+
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Stake 0.1 Initia to OmniNode for Address : ${address}`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
   } catch (error) {
     throw error;
   }
@@ -201,10 +254,9 @@ async function signAndBroadcast(msg) {
     console.log("TX Signature : ", signedTx.signatures[0]);
     const broadcastResult = await lcd.tx.broadcast(signedTx);
     console.log("TX Hash : ", broadcastResult.txhash);
-    console.log();
   } catch (error) {
     throw error;
   }
 }
 
-export { initiation, queryBalance, claimExp, sendToken, swap };
+export { initiation, queryBalance, claimExp, sendToken, swap, stakeInit };
