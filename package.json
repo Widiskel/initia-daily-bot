@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Initia Daily Routine Bot",
   "type": "module",
+  "repository": {
+    "url": "https://github.com/Widiskel/initia-daily-bot.git"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

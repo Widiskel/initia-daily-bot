@@ -1,8 +1,7 @@
 import * as initia from "./src/initia.js";
 import * as routine from "./src/initia_routine.js";
 import { account } from "./src/account.js";
-const TOTALSEND = 1;
-const TOTALSWAP = 50;
+import { AppConstant } from "./src/utils/constant.js";
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -16,7 +15,7 @@ async function doQuest(walletAddress, privateKey) {
               console.log(`Account ${walletAddress} Information`);
               console.log();
               console.log("Doing daily routine for Account " + walletAddress);
-              if (initBalance.amount / 1000000 < 20) {
+              if (initBalance.amount / 1000000 < 10) {
                 reject(
                   `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
                 );
@@ -24,22 +23,72 @@ async function doQuest(walletAddress, privateKey) {
                 console.log(
                   "1. Send 1 Init to Other for Account" + walletAddress
                 );
+                await routine.sendOneInitToOther();
                 console.log();
-                for (let send = 0; send < TOTALSEND; send++) {
-                  await routine.sendOneInitToOther();
-                }
+
                 console.log(
-                  "2. Swap 1 INIT to USDC for Account" + +walletAddress
+                  "2. Send 1 Init to Other (BLACKWING) for Account" +
+                    walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.BLACKWINGBRIDGEID
                 );
                 console.log();
-                for (let swap = 0; swap < TOTALSWAP; swap++) {
-                  await routine.swap();
-                  // await routine.swapTucana()
-                }
 
-                // console.log("3. Claim EXP");
-                // await routine.claimExp();
-                resolve();
+                console.log(
+                  "3. Send 1 Init to Other (Noon) for Account" + walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(AppConstant.NOONBRIDGEID);
+                console.log();
+
+                console.log(
+                  "4. Send 1 Init to Other (TUCANA) for Account" + walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.TUCANABRIDGEID
+                );
+                console.log();
+
+                console.log(
+                  "5. Send 1 Init to Other (INIT AI) for Account" +
+                    walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.INITAIBRIDGEID
+                );
+                console.log();
+
+                console.log(
+                  "6. Send 1 Init to Other (MINIMOVE) for Account" +
+                    walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.MINIMOVEBRIDGEID
+                );
+                console.log();
+
+                console.log(
+                  "7. Send 1 Init to Other (MINIWASM) for Account" +
+                    walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.MINIWASMBRIDGEID
+                );
+                console.log();
+
+                console.log(
+                  "8. Swap 1 INIT to USDC for Account" + walletAddress
+                );
+                await routine.swap();
+                console.log();
+
+                console.log(
+                  "9. Stake 0.1 INIT to Omninode Account" + walletAddress
+                );
+                await routine.stakeInit();
+                console.log();
+
+                resolve(true);
               }
             })
             .then((error) => reject(error));
@@ -57,10 +106,10 @@ async function doQuest(walletAddress, privateKey) {
       var walletAddress = account[0];
       var privateKey = account[1];
       await doQuest(walletAddress, privateKey).catch((error) =>
-        console.log(error)
+        console.error(error)
       );
     });
   } catch (error) {
-    console.log("Error During executing bot", error);
+    console.error("Error During executing bot", error);
   }
 })();
