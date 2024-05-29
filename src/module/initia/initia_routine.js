@@ -28,32 +28,7 @@ async function swap() {
     handlingError(error, "Swap");
   }
 }
-async function stakeInit() {
-  try {
-    await initia.stakeInit();
-  } catch (error) {
-    handlingError(error, "Stake");
-  }
-}
 
-function handlingError(error, context) {
-  if (error.response != undefined) {
-    if (error.response.data.message.includes("rpc error")) {
-      console.error(`Error during ${context} : RPC error`);
-    } else {
-      console.error(`Error during ${context} : `, error.response.data.message);
-    }
-  } else {
-    console.error(`Error during ${context} : `, error.message);
-  }
-}
-async function swapTucana() {
-  try {
-    await initia.swapTucana();
-  } catch (error) {
-    handlingError(error, "Swap");
-  }
-}
 async function stakeInit() {
   try {
     await initia.stakeInit();
@@ -95,7 +70,8 @@ async function swapTucana() {
 export {
   sendOneInitToOther,
   claimExp,
-  swap, swapTucana,
+  swap,
+  swapTucana,
   stakeInit,
   sendOneInitToOtherLayer,
 };

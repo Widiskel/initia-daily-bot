@@ -38,7 +38,8 @@ async function queryBalance() {
     const coinList = Object.keys(balances[0]._coins);
     coinList.forEach((coin) => {
       console.log(
-        `${balances[0]._coins[coin].amount / 1000000} ${balances[0]._coins[coin].denom
+        `${balances[0]._coins[coin].amount / 1000000} ${
+          balances[0]._coins[coin].denom
         }`
       );
     });
@@ -53,7 +54,7 @@ async function queryBalance() {
 
 async function claimExp() {
   try {
-    console.log(address)
+    console.log(address);
     const stage = await initiaRepo.getStageInfo();
     const referalPoint = await initiaRepo.getReferalPoint();
 
@@ -154,7 +155,7 @@ async function swap() {
       [],
       args
     );
-    console.log(initToUsdcSimulation)
+    console.log(initToUsdcSimulation);
 
     args.push(
       initia.bcs
@@ -262,100 +263,6 @@ async function stakeInit() {
       .catch((err) => {
         throw err;
       });
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function swapTucana() {
-  try {
-    console.log("Swapping 1 INITIA to USDC & USDC to INITIA");
-    // Args INITIA > USDC
-    var args = [
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
-        .toBase64(),
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIAMETADATAADDRESS)
-        .toBase64(),
-      initia.bcs.u64().serialize(1000000).toBase64(), // 1 INITIA
-    ];
-    const initToUsdcSimulation = await lcd.move.viewFunction(
-      "0x1",
-      "dex",
-      "get_swap_simulation",
-      [],
-      args
-    );
-    console.log(initToUsdcSimulation) //get amount usdc
-
-    const argsP = [
-      '0xb8b4c3af57f5e4a006fa35b02b1fe7650233c584b6c7fb62ea6236aa26ee1b3c',
-      '0x1dc43345d5ffd958f06f737f50b63455345cdef07d5bdce355ed3dfe539a9f8c'
-    ]
-
-    args.push(
-      initia.bcs.vector(initia.bcs.object()).serialize(argsP).toBase64(),
-      initia.bcs.vector(initia.bcs.bool()).serialize([true,true]).toBase64(),
-      initia.bcs.bool().serialize(true).toBase64(),
-      initia.bcs.u64().serialize(1000000).toBase64(),
-      initia.bcs.u64().serialize(initToUsdcSimulation).toBase64()
-    );
-
-    const initiaToUsdcMsg = new initia.MsgExecute();
-    initiaToUsdcMsg.function_name = "multi_hops_swap";
-    initiaToUsdcMsg.module_address = "0x3933c6ab1a6f84e9cda13ae78f389666c9b83e69";
-    initiaToUsdcMsg.module_name = "router";
-    initiaToUsdcMsg.sender = address;
-    initiaToUsdcMsg.args = args;
-    // console.log(initiaToUsdcMsg);
-    await signAndBroadcast(initiaToUsdcMsg);
-    console.log(
-      `Successfully Swap 1 Init To ${initToUsdcSimulation / 1000000} USDC`
-    );
-
-    // Args USDC > INIT >>>>
-    // args = [
-    //   initia.bcs
-    //     .address()
-    //     .serialize(AppConstant.INITIALIQUIDITYADDRESS)
-    //     .toBase64(),
-    //   initia.bcs
-    //     .address()
-    //     .serialize(AppConstant.USDCMETADATAADDRESS)
-    //     .toBase64(),
-    //   initia.bcs.u64().serialize(initToUsdcSimulation).toBase64(), // SWAPPED USDC
-    // ];
-    // const usdcToInitSimulation = await lcd.move.viewFunction(
-    //   "0x1",
-    //   "dex",
-    //   "get_swap_simulation",
-    //   [],
-    //   args
-    // );
-    // args.push(
-    //   initia.bcs
-    //     .option(initia.bcs.u64())
-    //     .serialize(usdcToInitSimulation)
-    //     .toBase64()
-    // );
-
-    // const usdcToInitiaMsg = new initia.MsgExecute();
-    // usdcToInitiaMsg.function_name = "swap_script";
-    // usdcToInitiaMsg.module_address = "0x1";
-    // usdcToInitiaMsg.module_name = "dex";
-    // usdcToInitiaMsg.sender = address;
-    // usdcToInitiaMsg.type_args = [];
-    // usdcToInitiaMsg.args = args;
-    // // console.log(usdcToInitiaMsg);
-
-    // await signAndBroadcast(usdcToInitiaMsg);
-    // console.log(
-    //   `Successfully Swap ${initToUsdcSimulation / 1000000} To ${usdcToInitSimulation / 1000000
-    //   } INIT`
-    // );
   } catch (error) {
     throw error;
   }
