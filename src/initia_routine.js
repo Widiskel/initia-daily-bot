@@ -7,6 +7,13 @@ async function sendOneInitToOther() {
     handlingError(error, "Sending Token");
   }
 }
+async function sendOneInitToOtherLayer(bridgeId) {
+  try {
+    await initia.sendTokenDifferentLayer(bridgeId);
+  } catch (error) {
+    handlingError(error, "Sending Token");
+  }
+}
 async function claimExp() {
   try {
     await initia.claimExp();
@@ -32,13 +39,19 @@ async function stakeInit() {
 function handlingError(error, context) {
   if (error.response != undefined) {
     if (error.response.data.message.includes("rpc error")) {
-      console.log(`Error during ${context} : RPC error`);
+      console.error(`Error during ${context} : RPC error`);
     } else {
-      console.log(`Error during ${context} : `, error.response.data.message);
+      console.error(`Error during ${context} : `, error.response.data.message);
     }
   } else {
-    console.log(`Error during ${context} : `, error.message);
+    console.error(`Error during ${context} : `, error.message);
   }
 }
 
-export { sendOneInitToOther, claimExp, swap, stakeInit };
+export {
+  sendOneInitToOther,
+  claimExp,
+  swap,
+  stakeInit,
+  sendOneInitToOtherLayer,
+};

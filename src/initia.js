@@ -108,6 +108,27 @@ async function sendToken() {
     throw error;
   }
 }
+async function sendTokenDifferentLayer(bridgeId) {
+  try {
+    console.log(`Sending 1 init to ${AppConstant.WIDISKELTESTNETADDRESS}`);
+    const msg = new initia.MsgInitiateTokenDeposit();
+    msg.bridge_id = bridgeId;
+    msg.amount = initia.Coin.fromString("1000000uinit");
+    msg.sender = address;
+    msg.to = AppConstant.WIDISKELTESTNETADDRESS;
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Send 1 Init To ${AppConstant.WIDISKELTESTNETADDRESS} From Different Layer`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function swap() {
   try {
@@ -253,9 +274,20 @@ async function signAndBroadcast(msg) {
     console.log("TX Signature : ", signedTx.signatures[0]);
     const broadcastResult = await lcd.tx.broadcast(signedTx);
     console.log("TX Hash : ", broadcastResult.txhash);
+    console.log(
+      `Explorer : https://scan.testnet.initia.xyz/initiation-1/txs/${broadcastResult.txhash}`
+    );
   } catch (error) {
     throw error;
   }
 }
 
-export { initiation, queryBalance, claimExp, sendToken, swap, stakeInit };
+export {
+  initiation,
+  queryBalance,
+  claimExp,
+  sendToken,
+  swap,
+  stakeInit,
+  sendTokenDifferentLayer,
+};

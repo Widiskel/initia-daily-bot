@@ -11,6 +11,12 @@ class AppConstant {
 
   static OMNINODEVALIDATORADDRESS =
     "initvaloper1m07fvq8flvc3ltjlgk30nznfdjf4hx9nwcpdy9";
+
+  static MINIMOVEBRIDGEID = 1;
+  static INITAIBRIDGEID = 6;
+  static BLACKWINGBRIDGEID = 8;
+  static TUCANABRIDGEID = 14;
+  static NOONBRIDGEID = 17;
 }
 
 export { AppConstant };
