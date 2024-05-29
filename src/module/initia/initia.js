@@ -1,6 +1,6 @@
 import * as initia from "@initia/initia.js";
-import * as initiaRepo from "./repository/initia_repo.js";
-import { AppConstant } from "./utils/constant.js";
+import * as initiaRepo from "../../repository/initia_repo.js";
+import { AppConstant } from "../../utils/constant.js";
 
 let lcd;
 let chainId;
