@@ -68,13 +68,22 @@ async function doQuest(walletAddress, privateKey) {
                 console.log();
 
                 console.log(
-                  "7. Swap 1 INIT to USDC for Account" + walletAddress
+                  "7. Send 1 Init to Other (MINIWASM) for Account" +
+                    walletAddress
+                );
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.MINIWASMBRIDGEID
+                );
+                console.log();
+
+                console.log(
+                  "8. Swap 1 INIT to USDC for Account" + walletAddress
                 );
                 await routine.swap();
                 console.log();
 
                 console.log(
-                  "8. Stake 0.1 INIT to Omninode Account" + walletAddress
+                  "9. Stake 0.1 INIT to Omninode Account" + walletAddress
                 );
                 await routine.stakeInit();
                 console.log();
