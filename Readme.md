@@ -36,3 +36,19 @@ export { account };
 ```
 
 6. run `npm run start`
+
+## NOTE
+
+the bot is sending testnet token to my initia address, you can change it on
+`src/utils/constant.js` change the `RECEIVERTESTNETADDRESS` to your address
+
+## CONTRIBUTE
+
+Feel free to fork and contribute adding more feature thanks
+
+## SUPPORT
+
+want to support me for creating another bot ?
+buy me a coffee on
+EVM : `0x0fd08d2d42ff086bf8c6d057d02d802bf217559a`
+SOLANA : `3tE3Hs7P2wuRyVxyMD7JSf8JTAmEekdNsQWqAnayE1CN`

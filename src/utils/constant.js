@@ -1,6 +1,6 @@
 class AppConstant {
   static CLAIMPOINTMODULEADDRESS = "0x9065fda28f52bb14ade545411f02e8e07a9cb4ba";
-  static WIDISKELTESTNETADDRESS = "init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp";
+  static RECEIVERTESTNETADDRESS = "init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp";
 
   static INITIALIQUIDITYADDRESS =
     "0xdbf06c48af3984ec6d9ae8a9aa7dbb0bb1e784aa9b8c4a5681af660cf8558d7d";

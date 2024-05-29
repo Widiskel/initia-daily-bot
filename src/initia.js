@@ -88,17 +88,17 @@ async function claimExp() {
 
 async function sendToken() {
   try {
-    console.log(`Sending 1 init to ${AppConstant.WIDISKELTESTNETADDRESS}`);
+    console.log(`Sending 1 init to ${AppConstant.RECEIVERTESTNETADDRESS}`);
     const msg = new initia.MsgSend(
       address, // sender address
-      AppConstant.WIDISKELTESTNETADDRESS, // recipient address
+      AppConstant.RECEIVERTESTNETADDRESS, // recipient address
       "1000000uinit" // 1 Init
     );
 
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send 1 Init To ${AppConstant.WIDISKELTESTNETADDRESS}`
+          `Successfully Send 1 Init To ${AppConstant.RECEIVERTESTNETADDRESS}`
         );
       })
       .catch((err) => {
@@ -110,16 +110,16 @@ async function sendToken() {
 }
 async function sendTokenDifferentLayer(bridgeId) {
   try {
-    console.log(`Sending 1 init to ${AppConstant.WIDISKELTESTNETADDRESS}`);
+    console.log(`Sending 1 init to ${AppConstant.RECEIVERTESTNETADDRESS}`);
     const msg = new initia.MsgInitiateTokenDeposit();
     msg.bridge_id = bridgeId;
     msg.amount = initia.Coin.fromString("1000000uinit");
     msg.sender = address;
-    msg.to = AppConstant.WIDISKELTESTNETADDRESS;
+    msg.to = AppConstant.RECEIVERTESTNETADDRESS;
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send 1 Init To ${AppConstant.WIDISKELTESTNETADDRESS} From Different Layer`
+          `Successfully Send 1 Init To ${AppConstant.RECEIVERTESTNETADDRESS} From Different Layer`
         );
       })
       .catch((err) => {
