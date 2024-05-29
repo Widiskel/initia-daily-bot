@@ -89,14 +89,14 @@ async function doQuest(walletAddress, privateKey) {
                 await routine.stakeInit();
                 console.log();
 
-                // const tucana = new Tucana();
-                // tucana.address = walletAddress;
+                const tucana = new Tucana();
+                tucana.address = walletAddress;
 
-                // console.log(
-                //   "10. Swap 1 INIT to USDC on TUCANA Account" + walletAddress
-                // );
-                // await tucana.swap();
-                // console.log();
+                console.log(
+                  "10. Swap 1 INIT to USDC on TUCANA Account" + walletAddress
+                );
+                await tucana.swap();
+                console.log();
 
                 resolve(true);
               }

@@ -155,7 +155,7 @@ async function swap() {
       [],
       args
     );
-    console.log(initToUsdcSimulation);
+    // console.log(initToUsdcSimulation);
 
     args.push(
       initia.bcs
@@ -221,7 +221,7 @@ async function swap() {
     await signAndBroadcast(usdcToInitiaMsg)
       .then(() => {
         console.log(
-          `Successfully Swap ${initToUsdcSimulation / 1000000} To ${
+          `Successfully Swap ${initToUsdcSimulation / 1000000} USDC To ${
             usdcToInitSimulation / 1000000
           } INIT for Address : ${address}`
         );
@@ -292,4 +292,6 @@ export {
   swap,
   stakeInit,
   sendTokenDifferentLayer,
+  signAndBroadcast,
+  lcd,
 };

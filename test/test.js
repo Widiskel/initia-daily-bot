@@ -5,151 +5,26 @@ import { AppConstant } from "../src/utils/constant.js";
 
 const lcd = new initia.LCDClient("https://lcd.initiation-1.initia.xyz", {
   chainId: "initiation-1",
-  gasPrices: "0.151uinit",
-  gasAdjustment: "2.0",
 });
-
-const address = account[1][0];
-const privateKeyBytes = Buffer.from(account[1][1], "hex");
-const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
-
-const wallet = new initia.Wallet(lcd, key);
-const stage = await initiaRepo.getStageInfo();
-const referalPoint = await initiaRepo.getReferalPoint();
-
-console.log(JSON.parse(stage.data).current_stage);
-
-const msg = new initia.MsgExecute();
-msg.function_name = "claim_point";
-msg.module_address = AppConstant.CLAIMPOINTMODULEADDRESS;
-msg.module_name = "initia_xp";
-msg.sender = address;
-msg.type_args = [];
-msg.args = [
-  initia.bcs.u64().serialize(JSON.parse(stage.data).current_stage).toBase64(),
-  initia.bcs
-    .vector(initia.bcs.u8())
-    .serialize(initia.bcs.u8().serialize(0).toBase64().split(""))
-    .toBase64(),
-  initia.bcs.u64().serialize(100).toBase64(),
-  initia.bcs.u64().serialize(referalPoint.referral_point).toBase64(),
-];
-console.log(msg);
-
-const execute = async () => {
-  try {
-    const signedTx = await wallet.createAndSignTx({
-      msgs: [msg],
-    });
-
-    const broadcastResult = await lcd.tx.broadcast(signedTx);
-    console.log(broadcastResult);
-  } catch (error) {
-    throw error;
-  }
+const moduleAddress = "0x1";
+const moduleName = "dex";
+const fnName = "get_pool_info";
+const viewModule = async (moduleAddress, moduleName, fnName) => {
+  const viewResult = await lcd.move.viewFunction(
+    moduleAddress,
+    moduleName,
+    fnName,
+    undefined,
+    [
+      initia.bcs
+        .address()
+        .serialize(
+          "0xb8b4c3af57f5e4a006fa35b02b1fe7650233c584b6c7fb62ea6236aa26ee1b3c"
+        )
+        .toBase64(),
+    ]
+  );
+  console.log(viewResult);
 };
-try {
-  await execute();
-} catch (error) {
-  console.log(error.response.data.message);
-}
 
-// console.log(initia.bcs
-// .vector(
-//     initia.bcs.vector(
-//         initia.bcs.u8()
-//     )).parse(Uint8Array.from(Buffer.from("EyBG+AxyytyvA5eOkzCKbAmRTVOLLU46mnJIQEf4BtqNtiC2Cyc4+hUVCbbeJUcr1xlfpaOqsSAUUCtl0tU+nHhG1iAMSNlLBh6MrqP2WCKcLvNKxv8CpUGvejDW0YoDZ80esiCKqdIitAIi7XRAlYKr3KDj4xsyW1p5tX/CZpKWb2sxjyAE2MvPw3xVVRKtCVaHKBvoZV1qgTlC526/qzIbbVNY3yAHWo+7YEbiXDSni2qddEFGmWDwXAVZURMcG2Fp+nNlWiCpQUOK108DzM9ZsN66+JsUAbxQ+V4+jIezpjNo+/wE3yDVcvui2+tPFXWudqMvFhiAe//RinbTvSOAAlvfr8MeNSDSZXe2xOhKyWT2LKgXmm73e8XFp3EcqWl8GUoChzSqxiA8SLBVppcO0JamJIBtOGtdNvR8q7piT/NgxEt6SPzBySBt1IaP96gOpQJgx8dORUc/DWiKuRCHZToBy+uuyK3MwyAZuoHVkNe2jn6rLBLi53sPM/pyExKVpGXSacRY7wWGQyDJDmo5wTFqUUJt7ixgbyP8YLtL1oCt9AaO2FfTJxzitiCFNvzVwKE8juazq4Vk/5jSBkwsrum0sa1Pm3h0HtWGnyAKVaZFnp36vgiYV7An2/lxRDmZahHZLd9SO3Pv0PatUiDAmwqRuVm0ZTGLHn/oA2g13cguHD0BlosfaASTHikBhiBrFiMznwTGkApeRrA9SXGy2K3BUjpdxxsw1rhsoAFuByAyNpbglCOCFpu3BfQYNHfrVKVZxbDdHr3FLtJdjeubOSAB8zf6YwqKWYICk2jMC31s6aHcDKoJ6MjL+KJ4WMXSUw==", "base64"))))
-
-const asss = [
-  "BAAAAAAAAAA=", //stage
-  "EiBm6vdv1GOfsa00OEVZbdO0g55ANzdvD7eWDq+0MfPzVyBbT/+Z2TFdCbW/h4ak8H5CVb7YLFRdoEdNvadby4iaICD4t0E+te1NWhwR7CMTuKOjnQqqsFoxZxnmDRnn55b27iAtJznF55irRtZGrWPUp3H1wS6U25sZ3FK3pIzG0vttLCC3ML1yMYeIJIMy3GR7b/Wx2DgSan/qqu3ELLqQHO71GiBHzvBCarFyqVxroXvGDuyFZNVQVu7o7G7bQUe0xoRBzCCeRxXqVmdvEU5Ja42Zekl5IphC0d98UFWR5kteU+m+ciDaOKI4t7brJWFmtWgOWPx2VqyFL32Mpo/XJHWNeivf3CC0KsKBhcw7HKxikKPa7XY3sHrWBG/PYzDoOCzGxa89ziBVoU0MPeMYOQ8aUSfnjW6+8RQX+oPOKlAqmOO2XdYgSSB4uHsAa5ei0vUm3wM5Xzvv1wBMqiqeytRo3krBwLlTJCA0+b7MVbitZstic4BOlfCAVbdNwRQDsqCBUKDOMjAshiCyUYVLMCoQV7Cj/HJj5QmJmwc0k7AnVhdBUkgSo1TY6iDZVESGh/SduqCV/Rfa5+dbRmUfheYwKLRs6NtUt9bqjiA+GKBPZGvjD/yKXJs9dVRphFS6rc0IbYxR6c4nW6PQqCDAovUhfUeeglQJTyODxQBBL9oPr+dZOKRap2/FE63AnyBE9ZiI0PTbUL0k/G5PGplJsOE5AgemHpYdOS+DF8SJGCATZ1+E5ayprbr2XeSnUigYoF4xCGg9ATe87yS6+tBwAw==",
-  "MgAAAAAAAAA=", //task_point
-  "AAAAAAAAAAA=" // reff point amm
-]
-
-// console.log(initia.bcs
-//     .u64() // type
-//     .parse(
-//       Uint8Array.from(Buffer.from("AAAAAAAAAAA=", 'base64'))
-//     ))
-
-// console.log(asss[1])
-// console.log(initia.bcs.vector(initia.bcs.u8()).serialize(["init1wd4phwvdx2x0sxn4xulwmjsr52z8vd92767w3x"]).toBase64())
-
-// console.log(initia.bcs.u64().serialize(0).toBase64())
-
-
-const nn = [ //get_swap_simulation
-  "Ari0w69X9eSgBvo1sCsf52UCM8WEtsf7YupiNqom7hs8HcQzRdX/2Vjwb3N/ULY0VTRc3vB9W9zjVe09/lOan4w=",
-  "AgEB",
-  "AQ==",
-  "QEIPAAAAAAA=",
-  "p5MKAAAAAAA="
-]
-
-const inq = [ //request console browser
-  "Asp86bnPbdJQKeais9LOXXhc/4TX1+WGZMfzFfLP9XWM8qBdIEEstc13ne5o5jj2paQlmQOf2WpEZpqFiIJCNgs=",
-  "AgEA",
-  "AQ==",
-  "QEIPAAAAAAA="
-]
-
-// serialize value to BCS and encode it to base64
-const serializedU64 = bcs
-  .u64() // type
-  .serialize(1234) // value 
-  .toBase64()
-
-// deserialize
-const deserializedU64pp = bcs
-  .address() // type
-  .parse(
-    Uint8Array.from(Buffer.from(inq[0], 'base64'))
-  )
-
-console.log(deserializedU64pp)
-const deserializedU64 = bcs
-  .vector(bcs.object()) // type
-  .parse(
-    Uint8Array.from(Buffer.from(nn[0], 'base64'))
-  )
-
-console.log(deserializedU64)
-
-const deserializedU641 = bcs
-  .vector(bcs.bool()) // type
-  .parse(
-    Uint8Array.from(Buffer.from(nn[1], 'base64'))
-  )
-
-console.log(deserializedU641)
-
-const deserializedU642 = bcs
-  .bool() // type
-  .parse(
-    Uint8Array.from(Buffer.from(nn[2], 'base64'))
-  )
-
-console.log(deserializedU642)
-
-const deserializedU643 = bcs
-  .u64() // type
-  .parse(
-    Uint8Array.from(Buffer.from(nn[3], 'base64'))
-  )
-
-console.log(deserializedU643)
-
-const deserializedU644 = bcs
-  .u64() // type
-  .parse(
-    Uint8Array.from(Buffer.from(nn[4], 'base64'))
-  )
-
-console.log(deserializedU644)
-
-// vector
-const serializedVector = bcs
-  .vector(bcs.u64())
-  .serialize([123, 456, 789])
-  .toBase64();
+viewModule(moduleAddress, moduleName, fnName);
