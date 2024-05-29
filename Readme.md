@@ -1,6 +1,6 @@
 # INITIA DAILY ROUTING BOT
 
-Initia testnet daily routing bot
+Initia testnet daily routine bot
 
 ## Prerequisite
 
