@@ -17,6 +17,8 @@
   "author": "Widiskel",
   "license": "ISC",
   "dependencies": {
-    "@initia/initia.js": "^0.2.5"
+    "@initia/initia.js": "^0.2.5",
+    "cron": "^3.1.6",
+    "twisters": "^1.1.0"
   }
 }
