@@ -36,5 +36,23 @@ async function swap() {
     }
   }
 }
+async function swapTucana() {
+  try {
+    await initia.swapTucana();
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.message) {
+      if (error.message && error.message.includes("rpc error")) {
+        console.log("Error during swapping initia: RPC error");
+      } else {
+        console.log(
+          "Error during swapping initia:",
+          error.response.data.message
+        );
+      }
+    } else {
+      console.log("Error during swapping innitia", error);
+    }
+  }
+}
 
-export { sendOneInitToOther, claimExp, swap };
+export { sendOneInitToOther, claimExp, swap, swapTucana };

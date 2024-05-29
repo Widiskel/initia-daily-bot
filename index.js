@@ -1,8 +1,8 @@
 import * as initia from "./src/initia.js";
 import * as routine from "./src/initia_routine.js";
 import { account } from "./src/account.js";
-const TOTALSEND = 5;
-const TOTALSWAP = 5;
+const TOTALSEND = 1;
+const TOTALSWAP = 50;
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -34,6 +34,7 @@ async function doQuest(walletAddress, privateKey) {
                 console.log();
                 for (let swap = 0; swap < TOTALSWAP; swap++) {
                   await routine.swap();
+                  // await routine.swapTucana()
                 }
 
                 // console.log("3. Claim EXP");
