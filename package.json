@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "schedule" : "node schedule.js",
     "test" : "node ./test/test.js"
   },
   "keywords": [

@@ -3,8 +3,6 @@ import * as routine from "./src/module/initia/initia_routine.js";
 import { account } from "./src/account.js";
 import { AppConstant } from "./src/utils/constant.js";
 import { Tucana } from "./src/module/tucana/tucana.js";
-import { Twisters } from "twisters";
-import { CronJob } from "cron";
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -114,37 +112,16 @@ async function doQuest(walletAddress, privateKey) {
 
 (async () => {
   try {
-    const twisters = new Twisters();
-
-    twisters.put('title', {
-      active: false,
-      text: `
-      Initia Task Runner !
-  `,
+    account.forEach(async (account) => {
+      var walletAddress = account[0];
+      var privateKey = account[1];
+      await doQuest(walletAddress, privateKey).catch((error) =>
+        console.error(error)
+      );
     });
-
-    const job = new CronJob(
-      "38 * * * *",
-      () => {
-        twisters.put("title", {
-          active: false,
-          text: `
-          Retrying ...
-      `,
-        });
-        account.forEach(async (account) => {
-          var walletAddress = account[0];
-          var privateKey = account[1];
-          await doQuest(walletAddress, privateKey).catch((error) =>
-            console.error(error)
-          );
-        });
-      },
-      null,
-      true
-    );
-    job.start();
   } catch (error) {
     console.error("Error During executing bot", error);
   }
 })();
+
+export { doQuest };
