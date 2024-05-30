@@ -32,21 +32,21 @@ async function doQuest(walletAddress, privateKey) {
                     walletAddress
                 );
                 await routine.sendOneInitToOtherLayer(
-                  AppConstant.BLACKWINGBRIDGEID
+                  AppConstant.BridgeID.BLACKWING
                 );
                 console.log();
 
                 console.log(
                   "3. Send 1 Init to Other (Noon) for Account" + walletAddress
                 );
-                await routine.sendOneInitToOtherLayer(AppConstant.NOONBRIDGEID);
+                await routine.sendOneInitToOtherLayer();
                 console.log();
 
                 console.log(
                   "4. Send 1 Init to Other (TUCANA) for Account" + walletAddress
                 );
                 await routine.sendOneInitToOtherLayer(
-                  AppConstant.TUCANABRIDGEID
+                  AppConstant.BridgeID.TUCANA
                 );
                 console.log();
 
@@ -55,7 +55,7 @@ async function doQuest(walletAddress, privateKey) {
                     walletAddress
                 );
                 await routine.sendOneInitToOtherLayer(
-                  AppConstant.INITAIBRIDGEID
+                  AppConstant.BridgeID.INITAI
                 );
                 console.log();
 
@@ -64,7 +64,7 @@ async function doQuest(walletAddress, privateKey) {
                     walletAddress
                 );
                 await routine.sendOneInitToOtherLayer(
-                  AppConstant.MINIMOVEBRIDGEID
+                  AppConstant.BridgeID.MINIMOVE
                 );
                 console.log();
 
@@ -73,7 +73,7 @@ async function doQuest(walletAddress, privateKey) {
                     walletAddress
                 );
                 await routine.sendOneInitToOtherLayer(
-                  AppConstant.MINIWASMBRIDGEID
+                  AppConstant.BridgeID.MINIWASM
                 );
                 console.log();
 
@@ -98,6 +98,7 @@ async function doQuest(walletAddress, privateKey) {
                 await tucana.swap();
                 console.log();
 
+                routine.resetRoutine();
                 resolve(true);
               }
             })

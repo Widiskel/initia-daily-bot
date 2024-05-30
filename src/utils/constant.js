@@ -1,8 +1,8 @@
 class AppConstant {
+  static RECEIVERTESTNETADDRESS = "init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp";
+
   static CLAIMPOINTMODULEADDRESS = "0x9065fda28f52bb14ade545411f02e8e07a9cb4ba";
   static TUCANAMODULEADDRESS = "0x3933C6AB1A6F84E9CDA13AE78F389666C9B83E69";
-
-  static RECEIVERTESTNETADDRESS = "init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp";
 
   static INITIALIQUIDITYADDRESS =
     "0xdbf06c48af3984ec6d9ae8a9aa7dbb0bb1e784aa9b8c4a5681af660cf8558d7d";
@@ -14,12 +14,18 @@ class AppConstant {
   static OMNINODEVALIDATORADDRESS =
     "initvaloper1m07fvq8flvc3ltjlgk30nznfdjf4hx9nwcpdy9";
 
-  static MINIMOVEBRIDGEID = 1;
-  static MINIWASMBRIDGEID = 2;
-  static INITAIBRIDGEID = 6;
-  static BLACKWINGBRIDGEID = 8;
-  static TUCANABRIDGEID = 14;
-  static NOONBRIDGEID = 17;
+  static BridgeID = {
+    MINIMOVE: 1,
+    MINIWASM: 2,
+    INITAI: 6,
+    BLACKWING: 8,
+    TUCANA: 14,
+    NOON: 17,
+  };
+
+  static getKey(object, value) {
+    return Object.keys(object).find((key) => object[key] === value);
+  }
 }
 
 export { AppConstant };

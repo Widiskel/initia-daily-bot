@@ -1,4 +1,12 @@
 import * as initia from "./initia.js";
+import { AppConstant } from "../../utils/constant.js";
+
+const maxRetries = 3;
+const retryableErrors = [];
+
+function resetRoutine() {
+  retryableErrors = [];
+}
 
 async function sendOneInitToOther() {
   try {
@@ -11,7 +19,7 @@ async function sendOneInitToOtherLayer(bridgeId) {
   try {
     await initia.sendTokenDifferentLayer(bridgeId);
   } catch (error) {
-    await handlingError(error, "sendOneInitToOtherLayer");
+    await handlingError(error, "sendOneInitToOtherLayer", bridgeId);
   }
 }
 async function claimExp() {
@@ -37,31 +45,54 @@ async function stakeInit() {
   }
 }
 
-async function retryContext(context){
-  console.log(`Retrying... ${context}`)
+async function retryContext(context, subcontext) {
+  console.log(`Retrying... ${context}`);
   if (context === "sendOneInitToOther") {
-    await sendOneInitToOther()
+    await sendOneInitToOther();
   } else if (context === "sendOneInitToOtherLayer") {
-    await sendOneInitToOtherLayer()
+    await sendOneInitToOtherLayer(subcontext);
   } else if (context === "claimExp") {
-    await claimExp()
+    await claimExp();
   } else if (context === "swap") {
-    await swap()
+    await swap();
   } else if (context === "stakeInit") {
-    await stakeInit()
+    await stakeInit();
   }
 }
 
-async function handlingError(error, context) {
+async function handlingError(error, context, subcontext) {
   if (error.response != undefined) {
     if (error.response.data.message.includes("rpc error")) {
-      console.error(`Error during ${context} : RPC error`);
-      await retryContext(context)
+      if (retryableErrors.filter((val) => val == context).length < maxRetries) {
+        retryableErrors.push(context);
+        console.error(
+          `Error during ${context} : RPC error ${
+            subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+          }`
+        );
+        await retryContext(context, subcontext);
+      } else {
+        console.error(
+          `Error during ${context} : RPC error ${
+            subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+          }Max retry limit reached`
+        );
+      }
     } else {
-      console.error(`Error during ${context} : `, error.response.data.message);
+      console.error(
+        `Error during ${context} ${
+          subcontext != undefined ? AppConstant.getKey(subcontext) : ""
+        } : `,
+        error.response.data.message
+      );
     }
   } else {
-    console.error(`Error during ${context} : `, error.message);
+    console.error(
+      `Error during ${context} ${
+        subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+      }: `,
+      error.message
+    );
   }
 }
 async function swapTucana() {
@@ -90,4 +121,5 @@ export {
   swapTucana,
   stakeInit,
   sendOneInitToOtherLayer,
+  resetRoutine,
 };
