@@ -115,6 +115,7 @@ async function doQuest(walletAddress, privateKey) {
 
 (async () => {
   try {
+    console.log(account.length)
     account.forEach(async (account) => {
       var walletAddress = account[0];
       var privateKey = account[1];
