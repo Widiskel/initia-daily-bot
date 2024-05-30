@@ -39,7 +39,7 @@ export { account };
 ## Running Bot
 
 - To do 1 time run execute `npm run start`
-- To do scheduler run execute `npm run schedule`
+- To do scheduler run execute `npm run schedule` (EXPERIMENTAL)
 
 ## NOTE
 
