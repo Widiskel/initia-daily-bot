@@ -36,7 +36,10 @@ const account = [["WALLET ADDRESS", "PRIVATE KEY"]];
 export { account };
 ```
 
-6. run `npm run start`
+## Running Bot
+
+- To do 1 time run execute `npm run start`
+- To do scheduler run execute `npm run schedule`
 
 ## NOTE
 
