@@ -39,7 +39,9 @@ async function doQuest(walletAddress, privateKey) {
                 console.log(
                   "3. Send 1 Init to Other (Noon) for Account" + walletAddress
                 );
-                await routine.sendOneInitToOtherLayer();
+                await routine.sendOneInitToOtherLayer(
+                  AppConstant.BridgeID.NOON
+                );
                 console.log();
 
                 console.log(

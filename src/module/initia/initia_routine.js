@@ -2,7 +2,7 @@ import * as initia from "./initia.js";
 import { AppConstant } from "../../utils/constant.js";
 
 const maxRetries = 3;
-const retryableErrors = [];
+var retryableErrors = [];
 
 function resetRoutine() {
   retryableErrors = [];
