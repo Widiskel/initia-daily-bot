@@ -45,7 +45,11 @@ async function queryBalance() {
     });
 
     console.log();
-    return balances[0]._coins.uinit;
+    if (balances[0]._coins.uinit) {
+      return balances[0]._coins.uinit.amount;
+    } else {
+      return 0;
+    }
   } catch (error) {
     console.error("Error during checking balance:", error);
     throw error;
@@ -56,7 +60,11 @@ async function checkGas() {
   try {
     const balances = await lcd.bank.balance(address);
     console.log();
-    return balances[0]._coins[AppConstant.COIN.GAS];
+    if (balances[0]._coins[AppConstant.COIN.GAS]) {
+      return balances[0]._coins[AppConstant.COIN.GAS].amount;
+    } else {
+      return 0;
+    }
   } catch (error) {
     console.error("Error during checking balance:", error);
     throw error;

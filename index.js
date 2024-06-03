@@ -12,7 +12,7 @@ async function doQuest(walletAddress, privateKey) {
         .initiation(walletAddress, privateKey)
         .then(async () => {
           await initia.checkGas().then(async (gasBalance) => {
-            if (gasBalance.amount / 100000 < 5) {
+            if (gasBalance / 1000000 < 5) {
               reject(
                 `Account ${walletAddress} GAS Token is not enough, min balance is 5 GAS`
               );
@@ -25,7 +25,7 @@ async function doQuest(walletAddress, privateKey) {
                   console.log(
                     "Doing daily routine for Account " + walletAddress
                   );
-                  if (initBalance.amount / 1000000 < 10) {
+                  if (initBalance / 1000000 < 10) {
                     reject(
                       `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
                     );
