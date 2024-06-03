@@ -12,9 +12,9 @@ async function doQuest(walletAddress, privateKey) {
         .initiation(walletAddress, privateKey)
         .then(async () => {
           await initia.checkGas().then(async (gasBalance) => {
-            if (gasBalance.amount / 100000 < 10) {
+            if (gasBalance.amount / 100000 < 5) {
               reject(
-                `Account ${walletAddress} GAS Token is not enough, min balance is 10 GAS`
+                `Account ${walletAddress} GAS Token is not enough, min balance is 5 GAS`
               );
             } else {
               await initia

@@ -6,7 +6,7 @@ Initia testnet daily routine bot
 
 To run this bot you need to
 
-1. Initia Testnet Account with > 30 INIT AND > 20 GAS Balance
+1. Initia Testnet Account with > 30 INIT AND > 5 GAS Balance
 2. Node JS Installed
 
 ## BOT FEATURE
