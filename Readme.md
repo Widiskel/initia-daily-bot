@@ -18,9 +18,10 @@ To run this bot you need to
 5. Send 1 Init to Other (INIT AI)
 6. Send 1 Init to Other (MINIMOVE)
 7. Send 1 Init to Other (MINIWASM)
-8. Swap 1 INIT to USDC And Swap back USDC to INIT
-9. Stake 0.1 INIT to Omninode
-10. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
+8. Send 1 Init to Other (CIVITA)
+9. Swap 1 INIT to USDC And Swap back USDC to INIT
+10. Stake 0.1 INIT to Omninode
+11. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
 
 ## Set Up
 
