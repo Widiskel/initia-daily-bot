@@ -37,7 +37,8 @@ class Tucana {
       await signAndBroadcast(msg)
         .then(() => {
           console.log(
-            `Successfully Swap 1 Initia To ${calculate.amount_out / 1000000
+            `Successfully Swap 1 Initia To ${
+              calculate.amount_out / 1000000
             } USDC for Address : ${this.address}`
           );
         })
@@ -76,16 +77,16 @@ class Tucana {
       await signAndBroadcast(backMsg)
         .then(() => {
           console.log(
-            `Successfully Swap ${calculate.amount_out / 1000000} USDC To ${calculateBack.amount_out / 1000000
+            `Successfully Swap ${calculate.amount_out / 1000000} USDC To ${
+              calculateBack.amount_out / 1000000
             } INIT for Address : ${this.address}`
           );
         })
         .catch((err) => {
           throw err;
         });
-
     } catch (error) {
-      this.handlingError(error, "swapTucana")
+      this.handlingError(error, "swapTucana");
     }
   }
 
@@ -116,34 +117,49 @@ class Tucana {
       if (error.response.data.message.includes("rpc error")) {
         if (error.response.data.message.includes("rpc error")) {
           console.error(
-            `Error during ${context} : RPC error account not found in tucana chain. ${subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+            `Error during ${context} : RPC error account not found in tucana chain ${
+              this.address
+            }. ${
+              subcontext != undefined
+                ? `(${AppConstant.getKey(subcontext)})`
+                : ""
             }`
           );
         } else {
-          if (retryableErrors.filter((val) => val == context).length < maxRetries) {
+          if (
+            retryableErrors.filter((val) => val == context).length < maxRetries
+          ) {
             retryableErrors.push(context);
             console.error(
-              `Error during ${context} : RPC error ${subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+              `Error during ${context} : RPC error ${
+                subcontext != undefined
+                  ? `(${AppConstant.getKey(subcontext)})`
+                  : ""
               }`
             );
             await retryContext(context, subcontext);
           } else {
             console.error(
-              `Error during ${context} : RPC error ${subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+              `Error during ${context} : RPC error ${
+                subcontext != undefined
+                  ? `(${AppConstant.getKey(subcontext)})`
+                  : ""
               }Max retry limit reached`
             );
           }
         }
       } else {
         console.error(
-          `Error during ${context} ${subcontext != undefined ? AppConstant.getKey(subcontext) : ""
+          `Error during ${context} ${
+            subcontext != undefined ? AppConstant.getKey(subcontext) : ""
           } : `,
           error.response.data.message
         );
       }
     } else {
       console.error(
-        `Error during ${context} ${subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+        `Error during ${context} ${
+          subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
         }: `,
         error.message
       );

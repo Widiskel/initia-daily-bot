@@ -3,6 +3,8 @@ class AppConstant {
 
   static CLAIMPOINTMODULEADDRESS = "0x9065fda28f52bb14ade545411f02e8e07a9cb4ba";
   static TUCANAMODULEADDRESS = "0x3933C6AB1A6F84E9CDA13AE78F389666C9B83E69";
+  static BRIDGEMODULEADDRESS =
+    "0x42cd8467b1c86e59bf319e5664a09b6b5840bb3fac64f5ce690b5041c530565a";
 
   static INITIALIQUIDITYADDRESS =
     "0xdbf06c48af3984ec6d9ae8a9aa7dbb0bb1e784aa9b8c4a5681af660cf8558d7d";
@@ -14,6 +16,9 @@ class AppConstant {
   static OMNINODEVALIDATORADDRESS =
     "initvaloper1m07fvq8flvc3ltjlgk30nznfdjf4hx9nwcpdy9";
 
+  static GASTOKEN =
+    "move/944f8dd8dc49f96c25fea9849f16436dcfa6d564eec802f3ef7f8b3ea85368ff";
+
   static BridgeID = {
     MINIMOVE: 1,
     MINIWASM: 2,
@@ -21,6 +26,7 @@ class AppConstant {
     BLACKWING: 8,
     TUCANA: 14,
     NOON: 17,
+    CIVITA: 24,
   };
 
   static getKey(object, value) {

@@ -10,101 +10,123 @@ async function doQuest(walletAddress, privateKey) {
       await initia
         .initiation(walletAddress, privateKey)
         .then(async () => {
-          await initia
-            .queryBalance()
-            .then(async (initBalance) => {
-              console.log(`Account ${walletAddress} Information`);
-              console.log();
-              console.log("Doing daily routine for Account " + walletAddress);
-              if (initBalance.amount / 1000000 < 10) {
-                reject(
-                  `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
-                );
-              } else {
-                console.log(
-                  "1. Send 1 Init to Other for Account" + walletAddress
-                );
-                await routine.sendOneInitToOther();
-                console.log();
+          await initia.checkGas().then(async (gasBalance) => {
+            if (gasBalance.amount / 100000 < 10) {
+              reject(
+                `Account ${walletAddress} GAS Token is not enough, min balance is 10 GAS`
+              );
+            } else {
+              await initia
+                .queryBalance()
+                .then(async (initBalance) => {
+                  console.log(`Account ${walletAddress} Information`);
+                  console.log();
+                  console.log(
+                    "Doing daily routine for Account " + walletAddress
+                  );
+                  if (initBalance.amount / 1000000 < 10) {
+                    reject(
+                      `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
+                    );
+                  } else {
+                    console.log(
+                      "1. Send 1 Init to Other for Account" + walletAddress
+                    );
+                    await routine.sendOneInitToOther();
+                    console.log();
 
-                console.log(
-                  "2. Send 1 Init to Other (BLACKWING) for Account" +
-                    walletAddress
-                );
-                await routine.sendOneInitToOtherLayer(
-                  AppConstant.BridgeID.BLACKWING
-                );
-                console.log();
+                    console.log(
+                      "2. Send 1 Init to Other (BLACKWING) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.BLACKWING
+                    );
+                    console.log();
 
-                console.log(
-                  "3. Send 1 Init to Other (Noon) for Account" + walletAddress
-                );
-                await routine.sendOneInitToOtherLayer(
-                  AppConstant.BridgeID.NOON
-                );
-                console.log();
+                    console.log(
+                      "3. Send 1 Init to Other (Noon) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.NOON
+                    );
+                    console.log();
 
-                console.log(
-                  "4. Send 1 Init to Other (TUCANA) for Account" + walletAddress
-                );
-                await routine.sendOneInitToOtherLayer(
-                  AppConstant.BridgeID.TUCANA
-                );
-                console.log();
+                    console.log(
+                      "4. Send 1 Init to Other (TUCANA) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.TUCANA
+                    );
+                    console.log();
 
-                console.log(
-                  "5. Send 1 Init to Other (INIT AI) for Account" +
-                    walletAddress
-                );
-                await routine.sendOneInitToOtherLayer(
-                  AppConstant.BridgeID.INITAI
-                );
-                console.log();
+                    console.log(
+                      "5. Send 1 Init to Other (INIT AI) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.INITAI
+                    );
+                    console.log();
 
-                console.log(
-                  "6. Send 1 Init to Other (MINIMOVE) for Account" +
-                    walletAddress
-                );
-                await routine.sendOneInitToOtherLayer(
-                  AppConstant.BridgeID.MINIMOVE
-                );
-                console.log();
+                    console.log(
+                      "6. Send 1 Init to Other (MINIMOVE) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.MINIMOVE
+                    );
+                    console.log();
 
-                console.log(
-                  "7. Send 1 Init to Other (MINIWASM) for Account" +
-                    walletAddress
-                );
-                await routine.sendOneInitToOtherLayer(
-                  AppConstant.BridgeID.MINIWASM
-                );
-                console.log();
+                    console.log(
+                      "7. Send 1 Init to Other (MINIWASM) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.MINIWASM
+                    );
+                    console.log();
 
-                console.log(
-                  "8. Swap 1 INIT to USDC for Account" + walletAddress
-                );
-                await routine.swap();
-                console.log();
+                    console.log(
+                      "8. Send 1 Init to Other (CIVITA) for Account" +
+                        walletAddress
+                    );
+                    await routine.sendOneInitToOtherLayer(
+                      AppConstant.BridgeID.CIVITA
+                    );
+                    console.log();
 
-                console.log(
-                  "9. Stake 0.1 INIT to Omninode Account" + walletAddress
-                );
-                await routine.stakeInit();
-                console.log();
+                    console.log(
+                      "9. Swap 1 INIT to USDC for Account" + walletAddress
+                    );
+                    await routine.swap();
+                    console.log();
 
-                const tucana = new Tucana();
-                tucana.address = walletAddress;
+                    console.log(
+                      "10. Stake 0.1 INIT to Omninode Account" + walletAddress
+                    );
+                    await routine.stakeInit();
+                    console.log();
 
-                console.log(
-                  "10. Swap 1 INIT to USDC on TUCANA Account" + walletAddress
-                );
-                await tucana.swap();
-                console.log();
+                    const tucana = new Tucana();
+                    tucana.address = walletAddress;
 
-                routine.resetRoutine();
-                resolve(true);
-              }
-            })
-            .then((error) => reject(error));
+                    console.log(
+                      "11. Swap 1 INIT to USDC on TUCANA Account" +
+                        walletAddress
+                    );
+                    await tucana.swap();
+                    console.log();
+
+                    routine.resetRoutine();
+                    resolve(true);
+                  }
+                })
+                .then((error) => reject(error));
+            }
+          });
         })
         .then((error) => reject(error));
     } catch (error) {
@@ -115,7 +137,6 @@ async function doQuest(walletAddress, privateKey) {
 
 (async () => {
   try {
-    console.log(account.length)
     account.forEach(async (account) => {
       var walletAddress = account[0];
       var privateKey = account[1];

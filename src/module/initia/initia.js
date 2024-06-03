@@ -19,7 +19,7 @@ async function initiation(walletAddress, pk) {
     key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
     lcd = new initia.LCDClient(`https://lcd.${chainId}.initia.xyz`, {
       chainId: chainId,
-      gasPrices: minGasPrice + "uinit",
+      gasPrices: minGasPrice + AppConstant.GASTOKEN,
       gasAdjustment: "2.0",
     });
     wallet = new initia.Wallet(lcd, key);
@@ -46,6 +46,28 @@ async function queryBalance() {
 
     console.log();
     return balances[0]._coins.uinit;
+  } catch (error) {
+    console.error("Error during checking balance:", error);
+    throw error;
+  }
+}
+
+async function checkGas() {
+  try {
+    const balances = await lcd.bank.balance(address);
+    const coinList = Object.keys(balances[0]._coins);
+    coinList.forEach((coin) => {
+      console.log(
+        `${balances[0]._coins[coin].amount / 1000000} ${
+          balances[0]._coins[coin].denom == AppConstant.GASTOKEN
+            ? "GAS"
+            : balances[0]._coins[coin].denom
+        }`
+      );
+    });
+
+    console.log();
+    return balances[0]._coins[AppConstant.GASTOKEN];
   } catch (error) {
     console.error("Error during checking balance:", error);
     throw error;
@@ -117,6 +139,63 @@ async function sendTokenDifferentLayer(bridgeId) {
     msg.amount = initia.Coin.fromString("1000000uinit");
     msg.sender = address;
     msg.to = AppConstant.RECEIVERTESTNETADDRESS;
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Send 1 Init To ${AppConstant.RECEIVERTESTNETADDRESS} From Different Layer`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function mixed_route_swap_transfer(bridgeId) {
+  console.log("BRIDGE ID" + bridgeId);
+  try {
+    console.log(`Sending 1 init to ${AppConstant.RECEIVERTESTNETADDRESS}`);
+    const brigeArgs = [
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIAMETADATAADDRESS)
+        .toBase64(),
+      "AA==",
+      initia.bcs.u64().serialize(1).toBase64(),
+    ];
+    console.log(brigeArgs);
+    const initToInit = await lcd.move.viewFunction(
+      AppConstant.BRIDGEMODULEADDRESS,
+      "swap_transfer",
+      "mixed_route_swap_simulation",
+      [],
+      brigeArgs
+    );
+    console.log(initToInit);
+
+    const msg = new initia.MsgExecute();
+    msg.function_name = "mixed_route_swap_deposit";
+    msg.module_address = AppConstant.BRIDGEMODULEADDRESS;
+    msg.module_name = "swap_transfer";
+    msg.sender = address;
+    msg.args = [
+      initia.bcs
+        .address()
+        .serialize(AppConstant.INITIAMETADATAADDRESS)
+        .toBase64(),
+      "AA==",
+      initia.bcs.u64().serialize(1000000).toBase64(),
+      "AbguDwAAAAAA",
+      initia.bcs.u64().serialize(bridgeId).toBase64(),
+      initia.bcs.address().serialize(address).toBase64(),
+      "AA==",
+    ];
+
+    console.log(AppConstant.getKey(bridgeId));
+    console.log(msg);
+
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
@@ -293,5 +372,6 @@ export {
   stakeInit,
   sendTokenDifferentLayer,
   signAndBroadcast,
+  checkGas,
   lcd,
 };
