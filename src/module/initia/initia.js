@@ -19,7 +19,7 @@ async function initiation(walletAddress, pk) {
     key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
     lcd = new initia.LCDClient(`https://lcd.${chainId}.initia.xyz`, {
       chainId: chainId,
-      gasPrices: minGasPrice + AppConstant.GASTOKEN,
+      gasPrices: minGasPrice + AppConstant.COIN.GAS,
       gasAdjustment: "2.0",
     });
     wallet = new initia.Wallet(lcd, key);
@@ -38,9 +38,9 @@ async function queryBalance() {
     const coinList = Object.keys(balances[0]._coins);
     coinList.forEach((coin) => {
       console.log(
-        `${balances[0]._coins[coin].amount / 1000000} ${
-          balances[0]._coins[coin].denom
-        }`
+        `${
+          balances[0]._coins[coin].amount / 1000000
+        } ${AppConstant.getCoinByValue(balances[0]._coins[coin].denom)}`
       );
     });
 
@@ -55,19 +55,8 @@ async function queryBalance() {
 async function checkGas() {
   try {
     const balances = await lcd.bank.balance(address);
-    const coinList = Object.keys(balances[0]._coins);
-    coinList.forEach((coin) => {
-      console.log(
-        `${balances[0]._coins[coin].amount / 1000000} ${
-          balances[0]._coins[coin].denom == AppConstant.GASTOKEN
-            ? "GAS"
-            : balances[0]._coins[coin].denom
-        }`
-      );
-    });
-
     console.log();
-    return balances[0]._coins[AppConstant.GASTOKEN];
+    return balances[0]._coins[AppConstant.COIN.GAS];
   } catch (error) {
     console.error("Error during checking balance:", error);
     throw error;
@@ -210,7 +199,7 @@ async function mixed_route_swap_transfer(bridgeId) {
   }
 }
 
-async function swap() {
+async function swap(oneWaySwap) {
   try {
     console.log(
       "Swapping 1 INITIA to USDC & USDC to INITIA for Account " + address
@@ -219,7 +208,7 @@ async function swap() {
     var args = [
       initia.bcs
         .address()
-        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
+        .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
         .toBase64(),
       initia.bcs
         .address()
@@ -262,52 +251,54 @@ async function swap() {
         throw err;
       });
 
-    // Args USDC > INIT
-    args = [
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
-        .toBase64(),
-      initia.bcs
-        .address()
-        .serialize(AppConstant.USDCMETADATAADDRESS)
-        .toBase64(),
-      initia.bcs.u64().serialize(initToUsdcSimulation).toBase64(), // SWAPPED USDC
-    ];
-    const usdcToInitSimulation = await lcd.move.viewFunction(
-      "0x1",
-      "dex",
-      "get_swap_simulation",
-      [],
-      args
-    );
-    args.push(
-      initia.bcs
-        .option(initia.bcs.u64())
-        .serialize(usdcToInitSimulation)
-        .toBase64()
-    );
+    if (oneWaySwap != true) {
+      // Args USDC > INIT
+      args = [
+        initia.bcs
+          .address()
+          .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
+          .toBase64(),
+        initia.bcs
+          .address()
+          .serialize(AppConstant.USDCMETADATAADDRESS)
+          .toBase64(),
+        initia.bcs.u64().serialize(initToUsdcSimulation).toBase64(), // SWAPPED USDC
+      ];
+      const usdcToInitSimulation = await lcd.move.viewFunction(
+        "0x1",
+        "dex",
+        "get_swap_simulation",
+        [],
+        args
+      );
+      args.push(
+        initia.bcs
+          .option(initia.bcs.u64())
+          .serialize(usdcToInitSimulation)
+          .toBase64()
+      );
 
-    const usdcToInitiaMsg = new initia.MsgExecute();
-    usdcToInitiaMsg.function_name = "swap_script";
-    usdcToInitiaMsg.module_address = "0x1";
-    usdcToInitiaMsg.module_name = "dex";
-    usdcToInitiaMsg.sender = address;
-    usdcToInitiaMsg.type_args = [];
-    usdcToInitiaMsg.args = args;
-    // console.log(usdcToInitiaMsg);
+      const usdcToInitiaMsg = new initia.MsgExecute();
+      usdcToInitiaMsg.function_name = "swap_script";
+      usdcToInitiaMsg.module_address = "0x1";
+      usdcToInitiaMsg.module_name = "dex";
+      usdcToInitiaMsg.sender = address;
+      usdcToInitiaMsg.type_args = [];
+      usdcToInitiaMsg.args = args;
+      // console.log(usdcToInitiaMsg);
 
-    await signAndBroadcast(usdcToInitiaMsg)
-      .then(() => {
-        console.log(
-          `Successfully Swap ${initToUsdcSimulation / 1000000} USDC To ${
-            usdcToInitSimulation / 1000000
-          } INIT for Address : ${address}`
-        );
-      })
-      .catch((err) => {
-        throw err;
-      });
+      await signAndBroadcast(usdcToInitiaMsg)
+        .then(() => {
+          console.log(
+            `Successfully Swap ${initToUsdcSimulation / 1000000} USDC To ${
+              usdcToInitSimulation / 1000000
+            } INIT for Address : ${address}`
+          );
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
   } catch (error) {
     throw error;
   }
@@ -319,7 +310,7 @@ async function stakeInit() {
     var args = [
       initia.bcs
         .address()
-        .serialize(AppConstant.INITIALIQUIDITYADDRESS)
+        .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
         .toBase64(),
       initia.bcs
         .address()
@@ -338,6 +329,82 @@ async function stakeInit() {
         console.log(
           `Successfully Stake 0.1 Initia to OmniNode for Address : ${address}`
         );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function stakeInitUsdc() {
+  try {
+    console.log(
+      `Stake 0.5 USDC / INITIA LP to OmniNode for Account ${address}`
+    );
+
+    await swap(true)
+      .then(async (data) => {
+        const simulate = await lcd.move.viewFunction(
+          AppConstant.BRIDGEMODULEADDRESS,
+          "dex_utils",
+          "single_asset_provide_liquidity_cal",
+          [],
+          [
+            initia.bcs
+              .address()
+              .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
+              .toBase64(),
+            initia.bcs
+              .address()
+              .serialize(AppConstant.USDCMETADATAADDRESS)
+              .toBase64(),
+            initia.bcs
+              .u64()
+              .serialize(0.1 * 1000000)
+              .toBase64(),
+          ]
+        );
+        console.log(simulate);
+
+        const msg = new initia.MsgExecute();
+        msg.function_name = "single_asset_provide_stake";
+        msg.module_address = AppConstant.BRIDGEMODULEADDRESS;
+        msg.sender = address;
+        msg.module_name = "dex_utils";
+        msg.args = [
+          initia.bcs
+            .address()
+            .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
+            .toBase64(),
+          initia.bcs
+            .address()
+            .serialize(AppConstant.USDCMETADATAADDRESS)
+            .toBase64(),
+          initia.bcs
+            .u64()
+            .serialize(0.5 * 1000000)
+            .toBase64(),
+          initia.bcs.option(initia.bcs.u64()).serialize(simulate[0]).toBase64(),
+          initia.bcs
+            .string()
+            .serialize(AppConstant.OMNINODEVALIDATORADDRESS)
+            .toBase64(),
+        ];
+
+        console.log(msg);
+
+        await signAndBroadcast(msg)
+          .then(() => {
+            console.log(
+              `Successfully Stake 0.5 USDC / INITIA LP to OmniNode for Address : ${address}`
+            );
+          })
+          .catch((err) => {
+            console.log(err.response.data.message);
+            throw err;
+          });
       })
       .catch((err) => {
         throw err;
@@ -369,9 +436,10 @@ export {
   claimExp,
   sendToken,
   swap,
-  stakeInit,
   sendTokenDifferentLayer,
   signAndBroadcast,
   checkGas,
+  stakeInit,
+  stakeInitUsdc,
   lcd,
 };

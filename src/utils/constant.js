@@ -6,8 +6,11 @@ class AppConstant {
   static BRIDGEMODULEADDRESS =
     "0x42cd8467b1c86e59bf319e5664a09b6b5840bb3fac64f5ce690b5041c530565a";
 
-  static INITIALIQUIDITYADDRESS =
+  static INITIAUSDCLIQUIDITYADDRESS =
     "0xdbf06c48af3984ec6d9ae8a9aa7dbb0bb1e784aa9b8c4a5681af660cf8558d7d";
+  static INITIATIALIQUIDITYADDRESS =
+    "0xb134ae6786f10ef74294e627d2519b63b7c742a6735f98682929fea9a84744d2";
+
   static INITIAMETADATAADDRESS =
     "0x8e4733bdabcf7d4afc3d14f0dd46c9bf52fb0fce9e4b996c939e195b8bc891d9";
   static USDCMETADATAADDRESS =
@@ -16,8 +19,17 @@ class AppConstant {
   static OMNINODEVALIDATORADDRESS =
     "initvaloper1m07fvq8flvc3ltjlgk30nznfdjf4hx9nwcpdy9";
 
-  static GASTOKEN =
-    "move/944f8dd8dc49f96c25fea9849f16436dcfa6d564eec802f3ef7f8b3ea85368ff";
+  static COIN = {
+    GAS: "move/944f8dd8dc49f96c25fea9849f16436dcfa6d564eec802f3ef7f8b3ea85368ff",
+    ETHINITLP:
+      "move/a2b0d3c8e53e379ede31f3a361ff02716d50ec53c6b65b8c48a81d5b06548200",
+    TIAINITLP:
+      "move/b134ae6786f10ef74294e627d2519b63b7c742a6735f98682929fea9a84744d2",
+    USDCINITLP:
+      "move/dbf06c48af3984ec6d9ae8a9aa7dbb0bb1e784aa9b8c4a5681af660cf8558d7d",
+    INIT: "uinit",
+    USDC: "uusdc",
+  };
 
   static BridgeID = {
     MINIMOVE: 1,
@@ -31,6 +43,15 @@ class AppConstant {
 
   static getKey(object, value) {
     return Object.keys(object).find((key) => object[key] === value);
+  }
+
+  static getCoinByValue(value) {
+    for (const coin in this.COIN) {
+      if (this.COIN[coin] === value) {
+        return coin;
+      }
+    }
+    return value;
   }
 }
 

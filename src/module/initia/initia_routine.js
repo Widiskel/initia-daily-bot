@@ -1,5 +1,6 @@
 import * as initia from "./initia.js";
 import { AppConstant } from "../../utils/constant.js";
+import { Pair } from "../../utils/enum/pair.js";
 
 const maxRetries = 3;
 var retryableErrors = [];
@@ -37,11 +38,16 @@ async function swap() {
   }
 }
 
-async function stakeInit() {
+async function stakeInit(pair) {
+  console.log(pair);
   try {
-    await initia.stakeInit();
+    if (pair == Pair.INITIAUSDC) {
+      await initia.stakeInitUsdc();
+    } else {
+      await initia.stakeInit();
+    }
   } catch (error) {
-    await handlingError(error, "stakeInit");
+    await handlingError(error, "stakeInit", pair);
   }
 }
 
@@ -56,7 +62,11 @@ async function retryContext(context, subcontext) {
   } else if (context === "swap") {
     await swap();
   } else if (context === "stakeInit") {
-    await stakeInit();
+    if (subcontext) {
+      await stakeInit(subcontext);
+    } else {
+      await stakeInit();
+    }
   }
 }
 
@@ -67,15 +77,27 @@ async function handlingError(error, context, subcontext) {
         retryableErrors.push(context);
         console.error(
           `Error during ${context} : RPC error ${
-            subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+            subcontext != undefined
+              ? `(${
+                  AppConstant.getKey(subcontext) != undefined
+                    ? AppConstant.getKey(subcontext)
+                    : subcontext
+                })`
+              : ""
           }`
         );
         await retryContext(context, subcontext);
       } else {
         console.error(
           `Error during ${context} : RPC error ${
-            subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
-          }Max retry limit reached`
+            subcontext != undefined
+              ? `(${
+                  AppConstant.getKey(subcontext) != undefined
+                    ? AppConstant.getKey(subcontext)
+                    : subcontext
+                })`
+              : ""
+          } Max retry limit reached`
         );
       }
     } else {
@@ -89,30 +111,18 @@ async function handlingError(error, context, subcontext) {
   } else {
     console.error(
       `Error during ${context} ${
-        subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
+        subcontext != undefined
+          ? `(${
+              AppConstant.getKey(subcontext) != undefined
+                ? AppConstant.getKey(subcontext)
+                : subcontext
+            })`
+          : ""
       }: `,
       error.message
     );
   }
 }
-// async function swapTucana() {
-//   try {
-//     await initia.swapTucana();
-//   } catch (error) {
-//     if (error.response && error.response.data && error.response.data.message) {
-//       if (error.message && error.message.includes("rpc error")) {
-//         console.log("Error during swapping initia: RPC error");
-//       } else {
-//         console.log(
-//           "Error during swapping initia:",
-//           error.response.data.message
-//         );
-//       }
-//     } else {
-//       console.log("Error during swapping innitia", error);
-//     }
-//   }
-// }
 
 export {
   sendOneInitToOther,

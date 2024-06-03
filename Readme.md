@@ -6,7 +6,7 @@ Initia testnet daily routine bot
 
 To run this bot you need to
 
-1. Initia Testnet Account with 30 INIT Balance
+1. Initia Testnet Account with > 30 INIT AND > 20 GAS Balance
 2. Node JS Installed
 
 ## BOT FEATURE
@@ -21,7 +21,8 @@ To run this bot you need to
 8. Send 1 Init to Other (CIVITA)
 9. Swap 1 INIT to USDC And Swap back USDC to INIT
 10. Stake 0.1 INIT to Omninode
-11. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
+11. Stake 0.5 USDC / INIT LP to Omninode
+12. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
 
 ## Set Up
 

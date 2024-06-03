@@ -3,6 +3,7 @@ import * as routine from "./src/module/initia/initia_routine.js";
 import { account } from "./src/account.js";
 import { AppConstant } from "./src/utils/constant.js";
 import { Tucana } from "./src/module/tucana/tucana.js";
+import { Pair } from "./src/utils/enum/pair.js";
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -110,11 +111,18 @@ async function doQuest(walletAddress, privateKey) {
                     await routine.stakeInit();
                     console.log();
 
+                    console.log(
+                      "11. Stake 0.5 USDC / INITIA LP to Omninode Account" +
+                        walletAddress
+                    );
+                    await routine.stakeInit(Pair.INITIAUSDC);
+                    console.log();
+
                     const tucana = new Tucana();
                     tucana.address = walletAddress;
 
                     console.log(
-                      "11. Swap 1 INIT to USDC on TUCANA Account" +
+                      "12. Swap 1 INIT to USDC on TUCANA Account" +
                         walletAddress
                     );
                     await tucana.swap();
