@@ -39,7 +39,6 @@ async function swap() {
 }
 
 async function stakeInit(pair) {
-  console.log(pair);
   try {
     if (pair == Pair.INITIAUSDC) {
       await initia.stakeInitUsdc();
@@ -128,7 +127,6 @@ export {
   sendOneInitToOther,
   claimExp,
   swap,
-  // swapTucana,
   stakeInit,
   sendOneInitToOtherLayer,
   resetRoutine,

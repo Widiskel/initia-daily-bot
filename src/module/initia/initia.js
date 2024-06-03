@@ -366,7 +366,6 @@ async function stakeInitUsdc() {
               .toBase64(),
           ]
         );
-        console.log(simulate);
 
         const msg = new initia.MsgExecute();
         msg.function_name = "single_asset_provide_stake";
@@ -392,8 +391,6 @@ async function stakeInitUsdc() {
             .serialize(AppConstant.OMNINODEVALIDATORADDRESS)
             .toBase64(),
         ];
-
-        console.log(msg);
 
         await signAndBroadcast(msg)
           .then(() => {

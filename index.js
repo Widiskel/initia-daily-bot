@@ -100,19 +100,19 @@ async function doQuest(walletAddress, privateKey) {
                     console.log();
 
                     console.log(
-                      "9. Swap 1 INIT to USDC for Account" + walletAddress
+                      "9. Swap 1 INIT to USDC for Account " + walletAddress
                     );
                     await routine.swap();
                     console.log();
 
                     console.log(
-                      "10. Stake 0.1 INIT to Omninode Account" + walletAddress
+                      "10. Stake 0.1 INIT to Omninode Account " + walletAddress
                     );
                     await routine.stakeInit();
                     console.log();
 
                     console.log(
-                      "11. Stake 0.5 USDC / INITIA LP to Omninode Account" +
+                      "11. Stake 0.5 USDC / INITIA LP to Omninode Account " +
                         walletAddress
                     );
                     await routine.stakeInit(Pair.INITIAUSDC);
