@@ -1,6 +1,7 @@
 import * as initia from "@initia/initia.js";
 import * as initiaRepo from "../../repository/initia_repo.js";
 import { AppConstant } from "../../utils/constant.js";
+import { Pair } from "../../utils/enum/pair.js";
 
 let lcd;
 let chainId;
@@ -207,52 +208,74 @@ async function mixed_route_swap_transfer(bridgeId) {
   }
 }
 
-async function swap(oneWaySwap) {
+async function swap(oneWaySwap, pair) {
   try {
-    console.log(
-      "Swapping 1 INITIA to USDC & USDC to INITIA for Account " + address
-    );
-    // Args INITIA > USDC
+    let liq;
+    let firstMetadata;
+    let secMetadata;
+
+    console.log("PAIR" + pair);
+
+    if (pair == Pair.INITIATIA) {
+      console.log(
+        `Swapping 1 INITIA to TIA ${
+          !oneWaySwap ? "& TIA to INITIA" : ""
+        } for Account ${address}`
+      );
+      firstMetadata = AppConstant.INITIAMETADATAADDRESS;
+      secMetadata = AppConstant.TIAMETADATAADRESS;
+      liq = AppConstant.INITIATIALIQUIDITYADDRESS;
+    } else if (pair == Pair.INITIAUSDC) {
+      console.log(
+        `Swapping 1 INITIA to USDC ${
+          !oneWaySwap ? "& USDC to INITIA" : ""
+        } for Account ${address}`
+      );
+      firstMetadata = AppConstant.INITIAMETADATAADDRESS;
+      secMetadata = AppConstant.USDCMETADATAADDRESS;
+      liq = AppConstant.INITIAUSDCLIQUIDITYADDRESS;
+    } else if (pair == Pair.INITIAETH) {
+      console.log(
+        `Swapping 1 INITIA to ETH ${
+          !oneWaySwap ? "& ETH to INITIA" : ""
+        } for Account ${address}`
+      );
+      firstMetadata = AppConstant.INITIAMETADATAADDRESS;
+      secMetadata = AppConstant.ETHMETADATAADRESS;
+      liq = AppConstant.INITIAETHLIQUIDITYADDRESS;
+    }
+
+    //First
     var args = [
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
-        .toBase64(),
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIAMETADATAADDRESS)
-        .toBase64(),
+      initia.bcs.address().serialize(liq).toBase64(),
+      initia.bcs.address().serialize(firstMetadata).toBase64(),
       initia.bcs.u64().serialize(1000000).toBase64(), // 1 INITIA
     ];
-    const initToUsdcSimulation = await lcd.move.viewFunction(
+    const firstSim = await lcd.move.viewFunction(
       "0x1",
       "dex",
       "get_swap_simulation",
       [],
       args
     );
-    // console.log(initToUsdcSimulation);
 
     args.push(
-      initia.bcs
-        .option(initia.bcs.u64())
-        .serialize(initToUsdcSimulation)
-        .toBase64()
+      initia.bcs.option(initia.bcs.u64()).serialize(firstSim).toBase64()
     );
 
-    const initiaToUsdcMsg = new initia.MsgExecute();
-    initiaToUsdcMsg.function_name = "swap_script";
-    initiaToUsdcMsg.module_address = "0x1";
-    initiaToUsdcMsg.module_name = "dex";
-    initiaToUsdcMsg.sender = address;
-    initiaToUsdcMsg.args = args;
-    // console.log(initiaToUsdcMsg);
-    await signAndBroadcast(initiaToUsdcMsg)
+    const firstMsg = new initia.MsgExecute();
+    firstMsg.function_name = "swap_script";
+    firstMsg.module_address = "0x1";
+    firstMsg.module_name = "dex";
+    firstMsg.sender = address;
+    firstMsg.args = args;
+
+    await signAndBroadcast(firstMsg)
       .then(() => {
         console.log(
-          `Successfully Swap 1 Init To ${
-            initToUsdcSimulation / 1000000
-          } USDC for Address : ${address}`
+          `Successfully Swap 1 To ${
+            firstSim / 1000000
+          } with Pair ${pair} for Address : ${address}`
         );
       })
       .catch((err) => {
@@ -260,19 +283,13 @@ async function swap(oneWaySwap) {
       });
 
     if (oneWaySwap != true) {
-      // Args USDC > INIT
+      // SECOND
       args = [
-        initia.bcs
-          .address()
-          .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
-          .toBase64(),
-        initia.bcs
-          .address()
-          .serialize(AppConstant.USDCMETADATAADDRESS)
-          .toBase64(),
-        initia.bcs.u64().serialize(initToUsdcSimulation).toBase64(), // SWAPPED USDC
+        initia.bcs.address().serialize(liq).toBase64(),
+        initia.bcs.address().serialize(secMetadata).toBase64(),
+        initia.bcs.u64().serialize(firstSim).toBase64(), // SWAPPED TOKEN
       ];
-      const usdcToInitSimulation = await lcd.move.viewFunction(
+      const secondSim = await lcd.move.viewFunction(
         "0x1",
         "dex",
         "get_swap_simulation",
@@ -280,27 +297,22 @@ async function swap(oneWaySwap) {
         args
       );
       args.push(
-        initia.bcs
-          .option(initia.bcs.u64())
-          .serialize(usdcToInitSimulation)
-          .toBase64()
+        initia.bcs.option(initia.bcs.u64()).serialize(secondSim).toBase64()
       );
 
-      const usdcToInitiaMsg = new initia.MsgExecute();
-      usdcToInitiaMsg.function_name = "swap_script";
-      usdcToInitiaMsg.module_address = "0x1";
-      usdcToInitiaMsg.module_name = "dex";
-      usdcToInitiaMsg.sender = address;
-      usdcToInitiaMsg.type_args = [];
-      usdcToInitiaMsg.args = args;
-      // console.log(usdcToInitiaMsg);
+      const secondMsg = new initia.MsgExecute();
+      secondMsg.function_name = "swap_script";
+      secondMsg.module_address = "0x1";
+      secondMsg.module_name = "dex";
+      secondMsg.sender = address;
+      secondMsg.type_args = [];
+      secondMsg.args = args;
+      // console.log(secondMsg);
 
-      await signAndBroadcast(usdcToInitiaMsg)
+      await signAndBroadcast(secondMsg)
         .then(() => {
           console.log(
-            `Successfully Swap ${initToUsdcSimulation / 1000000} USDC To ${
-              usdcToInitSimulation / 1000000
-            } INIT for Address : ${address}`
+            `Successfully Swap Back ${pair} for Address : ${address}`
           );
         })
         .catch((err) => {
@@ -352,7 +364,7 @@ async function stakeInitUsdc() {
       `Stake 0.5 USDC / INITIA LP to OmniNode for Account ${address}`
     );
 
-    await swap(true)
+    await swap(true, Pair.INITIAUSDC)
       .then(async (data) => {
         const simulate = await lcd.move.viewFunction(
           AppConstant.BRIDGEMODULEADDRESS,
@@ -418,6 +430,150 @@ async function stakeInitUsdc() {
     throw error;
   }
 }
+async function stakeTiaInitia() {
+  try {
+    console.log(
+      `Stake 0.01 TIA / INITIA LP to OmniNode for Account ${address}`
+    );
+
+    await swap(true, Pair.INITIATIA)
+      .then(async (data) => {
+        const simulate = await lcd.move.viewFunction(
+          AppConstant.BRIDGEMODULEADDRESS,
+          "dex_utils",
+          "single_asset_provide_liquidity_cal",
+          [],
+          [
+            initia.bcs
+              .address()
+              .serialize(AppConstant.INITIATIALIQUIDITYADDRESS)
+              .toBase64(),
+            initia.bcs
+              .address()
+              .serialize(AppConstant.TIAMETADATAADRESS)
+              .toBase64(),
+            initia.bcs
+              .u64()
+              .serialize(0.01 * 1000000)
+              .toBase64(),
+          ]
+        );
+
+        const msg = new initia.MsgExecute();
+        msg.function_name = "single_asset_provide_stake";
+        msg.module_address = AppConstant.BRIDGEMODULEADDRESS;
+        msg.sender = address;
+        msg.module_name = "dex_utils";
+        msg.args = [
+          initia.bcs
+            .address()
+            .serialize(AppConstant.INITIATIALIQUIDITYADDRESS)
+            .toBase64(),
+          initia.bcs
+            .address()
+            .serialize(AppConstant.TIAMETADATAADRESS)
+            .toBase64(),
+          initia.bcs
+            .u64()
+            .serialize(0.01 * 1000000)
+            .toBase64(),
+          initia.bcs.option(initia.bcs.u64()).serialize(simulate[0]).toBase64(),
+          initia.bcs
+            .string()
+            .serialize(AppConstant.OMNINODEVALIDATORADDRESS)
+            .toBase64(),
+        ];
+
+        await signAndBroadcast(msg)
+          .then(() => {
+            console.log(
+              `Successfully Stake 0.01 TIA / INITIA LP to OmniNode for Address : ${address}`
+            );
+          })
+          .catch((err) => {
+            console.log(err.response.data.message);
+            throw err;
+          });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+async function stakeEthInitia() {
+  try {
+    console.log(
+      `Stake 0.0001 ETH / INITIA LP to OmniNode for Account ${address}`
+    );
+
+    await swap(true, Pair.INITIAETH)
+      .then(async (data) => {
+        const simulate = await lcd.move.viewFunction(
+          AppConstant.BRIDGEMODULEADDRESS,
+          "dex_utils",
+          "single_asset_provide_liquidity_cal",
+          [],
+          [
+            initia.bcs
+              .address()
+              .serialize(AppConstant.INITIAETHLIQUIDITYADDRESS)
+              .toBase64(),
+            initia.bcs
+              .address()
+              .serialize(AppConstant.ETHMETADATAADRESS)
+              .toBase64(),
+            initia.bcs
+              .u64()
+              .serialize(0.0001 * 1000000)
+              .toBase64(),
+          ]
+        );
+
+        const msg = new initia.MsgExecute();
+        msg.function_name = "single_asset_provide_stake";
+        msg.module_address = AppConstant.BRIDGEMODULEADDRESS;
+        msg.sender = address;
+        msg.module_name = "dex_utils";
+        msg.args = [
+          initia.bcs
+            .address()
+            .serialize(AppConstant.INITIAETHLIQUIDITYADDRESS)
+            .toBase64(),
+          initia.bcs
+            .address()
+            .serialize(AppConstant.ETHMETADATAADRESS)
+            .toBase64(),
+          initia.bcs
+            .u64()
+            .serialize(0.0001 * 1000000)
+            .toBase64(),
+          initia.bcs.option(initia.bcs.u64()).serialize(simulate[0]).toBase64(),
+          initia.bcs
+            .string()
+            .serialize(AppConstant.OMNINODEVALIDATORADDRESS)
+            .toBase64(),
+        ];
+
+        await signAndBroadcast(msg)
+          .then(() => {
+            console.log(
+              `Successfully Stake 0.01 ETH / INITIA LP to OmniNode for Address : ${address}`
+            );
+          })
+          .catch((err) => {
+            console.log(err.response.data.message);
+            throw err;
+          });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function signAndBroadcast(msg) {
   try {
@@ -446,5 +602,7 @@ export {
   checkGas,
   stakeInit,
   stakeInitUsdc,
+  stakeTiaInitia,
+  stakeEthInitia,
   lcd,
 };

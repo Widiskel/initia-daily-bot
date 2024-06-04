@@ -30,11 +30,11 @@ async function claimExp() {
     await handlingError(error, "claimExp");
   }
 }
-async function swap() {
+async function swap(oneway, pair) {
   try {
-    await initia.swap();
+    await initia.swap(oneway, pair);
   } catch (error) {
-    await handlingError(error, "swap");
+    await handlingError(error, "swap", pair);
   }
 }
 
@@ -42,6 +42,10 @@ async function stakeInit(pair) {
   try {
     if (pair == Pair.INITIAUSDC) {
       await initia.stakeInitUsdc();
+    } else if (pair == Pair.INITIATIA) {
+      await initia.stakeTiaInitia();
+    } else if (pair == Pair.INITIAETH) {
+      await initia.stakeEthInitia();
     } else {
       await initia.stakeInit();
     }
@@ -51,7 +55,7 @@ async function stakeInit(pair) {
 }
 
 async function retryContext(context, subcontext) {
-  console.log(`Retrying... ${context}`);
+  console.log(`Retrying... ${context} ${subcontext}`);
   if (context === "sendOneInitToOther") {
     await sendOneInitToOther();
   } else if (context === "sendOneInitToOtherLayer") {
@@ -59,7 +63,7 @@ async function retryContext(context, subcontext) {
   } else if (context === "claimExp") {
     await claimExp();
   } else if (context === "swap") {
-    await swap();
+    await swap(false, subcontext);
   } else if (context === "stakeInit") {
     if (subcontext) {
       await stakeInit(subcontext);
@@ -102,7 +106,11 @@ async function handlingError(error, context, subcontext) {
     } else {
       console.error(
         `Error during ${context} ${
-          subcontext != undefined ? AppConstant.getKey(subcontext) : ""
+          subcontext != undefined
+            ? AppConstant.getKey(subcontext) != undefined
+              ? AppConstant.getKey(subcontext)
+              : subcontext
+            : ""
         } : `,
         error.response.data.message
       );

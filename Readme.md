@@ -20,9 +20,13 @@ To run this bot you need to
 7. Send 1 Init to Other (MINIWASM)
 8. Send 1 Init to Other (CIVITA)
 9. Swap 1 INIT to USDC And Swap back USDC to INIT
-10. Stake 0.1 INIT to Omninode
-11. Stake 0.5 USDC / INIT LP to Omninode
-12. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
+10. Swap 1 INIT to TIA And Swap back TIA to INIT
+11. Swap 1 INIT to ETH And Swap back ETH to INIT
+12. Stake 0.1 INIT to Omninode
+13. Stake 0.5 USDC / INIT LP
+14. Stake 0.01 TIA / INITIA LP
+15. Stake 0.0001 ETH / INITIA LP
+16. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
 
 ## Set Up
 

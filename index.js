@@ -25,6 +25,7 @@ async function doQuest(walletAddress, privateKey) {
                   console.log(
                     "Doing daily routine for Account " + walletAddress
                   );
+                  console.log();
                   if (initBalance / 1000000 < 10) {
                     reject(
                       `Balance < 20 Initia for account ${walletAddress}, Please request initia token from faucet `
@@ -102,27 +103,53 @@ async function doQuest(walletAddress, privateKey) {
                     console.log(
                       "9. Swap 1 INIT to USDC for Account " + walletAddress
                     );
-                    await routine.swap();
+                    await routine.swap(false, Pair.INITIAUSDC);
                     console.log();
 
                     console.log(
-                      "10. Stake 0.1 INIT to Omninode Account " + walletAddress
+                      "10. Swap 1 INIT to TIA for Account " + walletAddress
+                    );
+                    await routine.swap(false, Pair.INITIATIA);
+                    console.log();
+
+                    console.log(
+                      "11. Swap 1 INIT to ETH for Account " + walletAddress
+                    );
+                    await routine.swap(false, Pair.INITIAETH);
+                    console.log();
+
+                    console.log(
+                      "12. Stake 0.1 INIT to Omninode Account " + walletAddress
                     );
                     await routine.stakeInit();
                     console.log();
 
                     console.log(
-                      "11. Stake 0.5 USDC / INITIA LP to Omninode Account " +
+                      "13. Stake 0.5 USDC / INITIA LP to Omninode Account " +
                         walletAddress
                     );
                     await routine.stakeInit(Pair.INITIAUSDC);
+                    console.log();
+
+                    console.log(
+                      "14. Stake 0.01 TIA / INITIA LP to Omninode Account " +
+                        walletAddress
+                    );
+                    await routine.stakeInit(Pair.INITIAUSDC);
+                    console.log();
+
+                    console.log(
+                      "15. Stake 0.0001 ETH / INITIA LP to Omninode Account " +
+                        walletAddress
+                    );
+                    await routine.stakeInit(Pair.INITIAETH);
                     console.log();
 
                     const tucana = new Tucana();
                     tucana.address = walletAddress;
 
                     console.log(
-                      "12. Swap 1 INIT to USDC on TUCANA Account" +
+                      "16. Swap 1 INIT to USDC on TUCANA Account" +
                         walletAddress
                     );
                     await tucana.swap();
