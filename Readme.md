@@ -13,13 +13,13 @@ To run this bot you need to
 
 1. Send 1 Init to Other
 2. Send 1 Init to Other (BLACKWING)
-3. Send 1 Init to Other (Noon)
+3. Send 1 Init to Other (NOON)
 4. Send 1 Init to Other (TUCANA)
 5. Send 1 Init to Other (INIT AI)
 6. Send 1 Init to Other (MINIMOVE)
 7. Send 1 Init to Other (MINIWASM)
 8. Send 1 Init to Other (CIVITA)
-9. Send 1 Init to Other (MINIWASM)
+9. Bridge 1 Init to (CIVITA)
 10. Send 0.1 TIA to Other (NOON) (EXPERIMENTAL)
 11. Send 1 USDC to Other (BLACKWING) (EXPERIMENTAL)
 12. Send 5 TUC to Other (TUCANA) (EXPERIMENTAL)
@@ -34,6 +34,7 @@ To run this bot you need to
 21. Add 1 TUC to Tucana Liquidity PERP
 22. Swap 1 INIT to USDC on TUCANA DEX
 23. Roll Dice 3x on CIVITIA
+24. Claim Staking Reward on Omninode
 
 ## Set Up
 

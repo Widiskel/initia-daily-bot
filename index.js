@@ -103,6 +103,16 @@ async function doQuest(walletAddress, privateKey) {
                     console.log();
 
                     console.log(
+                      "9. Bridge 1 Init to (CIVITA) for Account" + walletAddress
+                    );
+                    await routine.sendTokenToOtherLayer(
+                      AppConstant.BridgeID.CIVITA,
+                      AppConstant.COIN.INIT,
+                      "bridge"
+                    );
+                    console.log();
+
+                    console.log(
                       "10. Send 0.1 TIA to Other (NOON) for Account " +
                         walletAddress
                     );
@@ -217,6 +227,13 @@ async function doQuest(walletAddress, privateKey) {
                       await civitia.rollDice();
                       console.log();
                     }
+
+                    console.log(
+                      "24. Claim Staking Reward on Omninode for Account " +
+                        walletAddress
+                    );
+                    await routine.claimStakingReward();
+                    console.log();
 
                     routine.resetRoutine();
                     resolve(true);

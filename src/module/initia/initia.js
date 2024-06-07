@@ -652,6 +652,52 @@ async function stakeEthInitia() {
   }
 }
 
+async function bridge(bridgeId) {
+  try {
+    console.log(`Bridging 1 init to ${AppConstant.RECEIVERWALLETADDRESS}`);
+    const msg = new initia.MsgInitiateTokenDeposit(
+      address, // sender address
+      bridgeId,
+      AppConstant.RECEIVERWALLETADDRESS, // recipient address
+      "1000000uinit" // 1 Init
+    );
+
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Bridge 1 Init To ${
+            AppConstant.RECEIVERWALLETADDRESS
+          } on ${AppConstant.getBridgeByValue(bridgeId)}`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function claimStakingReward() {
+  try {
+    console.log(`Claiming Staking reward on Omninode`);
+    const msg = new initia.MsgWithdrawDelegatorReward(
+      address,
+      AppConstant.OMNINODEVALIDATORADDRESS
+    );
+
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(`Successfully Claim Staking Reward on Omninode Validator`);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function signAndBroadcast(msg) {
   try {
     const signedTx = await wallet.createAndSignTx({
@@ -683,6 +729,8 @@ export {
   stakeTiaInitia,
   stakeEthInitia,
   transferToken,
+  bridge,
+  claimStakingReward,
   lcd,
   address,
   key,

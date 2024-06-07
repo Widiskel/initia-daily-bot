@@ -20,12 +20,14 @@ async function sendTokenToOtherLayer(
   bridgeId,
   coin = AppConstant.COIN.INIT,
   amount = 1,
-  method = "bridge"
+  method = ""
 ) {
   try {
-    if (method == "bridge") {
+    if (method == "") {
       await initia.sendTokenDifferentLayer(bridgeId, coin, amount);
-    } else {
+    } else if (method == "bridge") {
+      await initia.bridge(bridgeId, coin, amount);
+    } else if (method == "transfer") {
       await initia.transferToken(bridgeId, coin, amount);
     }
   } catch (error) {
@@ -47,6 +49,14 @@ async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
       coin,
       amount,
     ]);
+  }
+}
+
+async function claimStakingReward() {
+  try {
+    await initia.mixedRouteSwapTransfer(bridgeId, coin, amount);
+  } catch (error) {
+    await handlingError(error, "claimStakingReward");
   }
 }
 
@@ -86,6 +96,13 @@ async function retryContext(context, subcontext) {
   if (context === "sendOneInitToOther") {
     await sendOneInitToOther();
   } else if (context === "sendTokenToOtherLayer") {
+    if (subcontext[3] == "") {
+      await initia.sendTokenDifferentLayer(bridgeId, coin, amount);
+    } else if (subcontext[3] == "bridge") {
+      await initia.bridge(bridgeId, coin, amount);
+    } else if (subcontext[3] == "transfer") {
+      await initia.transferToken(bridgeId, coin, amount);
+    }
     await sendTokenToOtherLayer(
       subcontext[0],
       subcontext[1],
@@ -151,4 +168,5 @@ export {
   sendTokenToOtherLayer,
   resetRoutine,
   mixedRouteSwapTransfer,
+  claimStakingReward,
 };
