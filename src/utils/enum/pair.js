@@ -2,6 +2,7 @@ const Pair = {
   INITIAUSDC: "INITIA/USDC",
   INITIATIA: "INITIA/TIA",
   INITIAETH: "INITIA/ETH",
+  INITIATUC: "INITIA/TUCANA",
 
   getKey: function (value) {
     for (const key in this) {

@@ -18,7 +18,7 @@ async function doQuest(walletAddress, privateKey) {
               );
             } else {
               await initia
-                .queryBalance()
+                .queryBalance(AppConstant.COIN.INIT)
                 .then(async (initBalance) => {
                   console.log(`Account ${walletAddress} Information`);
                   console.log();
@@ -41,7 +41,7 @@ async function doQuest(walletAddress, privateKey) {
                       "2. Send 1 Init to Other (BLACKWING) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.BLACKWING
                     );
                     console.log();
@@ -50,7 +50,7 @@ async function doQuest(walletAddress, privateKey) {
                       "3. Send 1 Init to Other (Noon) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.NOON
                     );
                     console.log();
@@ -59,7 +59,7 @@ async function doQuest(walletAddress, privateKey) {
                       "4. Send 1 Init to Other (TUCANA) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.TUCANA
                     );
                     console.log();
@@ -68,7 +68,7 @@ async function doQuest(walletAddress, privateKey) {
                       "5. Send 1 Init to Other (INIT AI) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.INITAI
                     );
                     console.log();
@@ -77,7 +77,7 @@ async function doQuest(walletAddress, privateKey) {
                       "6. Send 1 Init to Other (MINIMOVE) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.MINIMOVE
                     );
                     console.log();
@@ -86,7 +86,7 @@ async function doQuest(walletAddress, privateKey) {
                       "7. Send 1 Init to Other (MINIWASM) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.MINIWASM
                     );
                     console.log();
@@ -95,51 +95,93 @@ async function doQuest(walletAddress, privateKey) {
                       "8. Send 1 Init to Other (CIVITA) for Account" +
                         walletAddress
                     );
-                    await routine.sendOneInitToOtherLayer(
+                    await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.CIVITA
                     );
                     console.log();
 
                     console.log(
-                      "9. Swap 1 INIT to USDC for Account " + walletAddress
+                      "10. Send 0.1 TIA to Other (NOON) for Account " +
+                        walletAddress
+                    );
+                    await routine.sendTokenToOtherLayer(
+                      AppConstant.BridgeID.NOON,
+                      AppConstant.COIN.TIA,
+                      0.1,
+                      "transfer"
+                    );
+                    console.log();
+
+                    console.log(
+                      "11. Send 1 USDC to Other (BLACKWING) for Account " +
+                        walletAddress
+                    );
+                    await routine.sendTokenToOtherLayer(
+                      AppConstant.BridgeID.BLACKWING,
+                      AppConstant.COIN.USDC,
+                      1,
+                      "transfer"
+                    );
+                    console.log();
+
+                    console.log(
+                      "12. Send 5 TUC to Other (TUCANA) for Account " +
+                        walletAddress
+                    );
+                    await routine.sendTokenToOtherLayer(
+                      AppConstant.BridgeID.TUCANA,
+                      AppConstant.COIN.TUCANA,
+                      5,
+                      "transfer"
+                    );
+                    console.log();
+
+                    console.log(
+                      "13. Send 0.0001 ETH to Other (TUCANA) for Account " +
+                        walletAddress
+                    );
+                    await routine.sendTokenToOtherLayer(
+                      AppConstant.BridgeID.MINIMOVE,
+                      AppConstant.COIN.ETH,
+                      0.0001,
+                      "transfer"
+                    );
+                    console.log();
+
+                    console.log(
+                      "14. Swap 1 INIT to USDC for Account " + walletAddress
                     );
                     await routine.swap(false, Pair.INITIAUSDC);
                     console.log();
 
                     console.log(
-                      "10. Swap 1 INIT to TIA for Account " + walletAddress
+                      "15 Swap 1 INIT to TIA for Account " + walletAddress
                     );
                     await routine.swap(false, Pair.INITIATIA);
                     console.log();
 
                     console.log(
-                      "11. Swap 1 INIT to ETH for Account " + walletAddress
-                    );
-                    await routine.swap(false, Pair.INITIAETH);
-                    console.log();
-
-                    console.log(
-                      "12. Stake 0.1 INIT to Omninode Account " + walletAddress
+                      "16. Stake 0.1 INIT to Omninode Account " + walletAddress
                     );
                     await routine.stakeInit();
                     console.log();
 
                     console.log(
-                      "13. Stake 0.5 USDC / INITIA LP to Omninode Account " +
+                      "17. Stake 0.5 USDC / INITIA LP to Omninode Account " +
                         walletAddress
                     );
                     await routine.stakeInit(Pair.INITIAUSDC);
                     console.log();
 
                     console.log(
-                      "14. Stake 0.01 TIA / INITIA LP to Omninode Account " +
+                      "18. Stake 0.01 TIA / INITIA LP to Omninode Account " +
                         walletAddress
                     );
                     await routine.stakeInit(Pair.INITIAUSDC);
                     console.log();
 
                     console.log(
-                      "15. Stake 0.0001 ETH / INITIA LP to Omninode Account " +
+                      "19. Stake 0.0001 ETH / INITIA LP to Omninode Account " +
                         walletAddress
                     );
                     await routine.stakeInit(Pair.INITIAETH);
@@ -149,7 +191,7 @@ async function doQuest(walletAddress, privateKey) {
                     tucana.address = walletAddress;
 
                     console.log(
-                      "16. Swap 1 INIT to USDC on TUCANA Account" +
+                      "20. Swap 1 INIT to USDC on TUCANA Account" +
                         walletAddress
                     );
                     await tucana.swap();

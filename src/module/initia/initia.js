@@ -2,6 +2,12 @@ import * as initia from "@initia/initia.js";
 import * as initiaRepo from "../../repository/initia_repo.js";
 import { AppConstant } from "../../utils/constant.js";
 import { Pair } from "../../utils/enum/pair.js";
+import {
+  formatDateNowToCustomFormat,
+  generateTokenInfo,
+  getChannel,
+  getTimestamp,
+} from "../../utils/helper.js";
 
 let lcd;
 let chainId;
@@ -33,7 +39,7 @@ async function initiation(walletAddress, pk) {
   }
 }
 
-async function queryBalance() {
+async function queryBalance(coin) {
   try {
     const balances = await lcd.bank.balance(address);
     const coinList = Object.keys(balances[0]._coins);
@@ -46,8 +52,8 @@ async function queryBalance() {
     });
 
     console.log();
-    if (balances[0]._coins.uinit) {
-      return balances[0]._coins.uinit.amount;
+    if (balances[0]._coins[coin]) {
+      return balances[0]._coins[coin].amount;
     } else {
       return 0;
     }
@@ -109,18 +115,16 @@ async function claimExp() {
 
 async function sendToken() {
   try {
-    console.log(`Sending 1 init to ${AppConstant.RECEIVERTESTNETADDRESS}`);
+    console.log(`Sending 1 init to ${address}`);
     const msg = new initia.MsgSend(
       address, // sender address
-      AppConstant.RECEIVERTESTNETADDRESS, // recipient address
+      address, // recipient address
       "1000000uinit" // 1 Init
     );
 
     await signAndBroadcast(msg)
       .then(() => {
-        console.log(
-          `Successfully Send 1 Init To ${AppConstant.RECEIVERTESTNETADDRESS}`
-        );
+        console.log(`Successfully Send 1 Init To ${address}`);
       })
       .catch((err) => {
         throw err;
@@ -129,18 +133,64 @@ async function sendToken() {
     throw error;
   }
 }
-async function sendTokenDifferentLayer(bridgeId) {
+
+async function transferToken(
+  bridgeId,
+  coin = AppConstant.COIN.INIT,
+  amount = 1
+) {
   try {
-    console.log(`Sending 1 init to ${AppConstant.RECEIVERTESTNETADDRESS}`);
-    const msg = new initia.MsgInitiateTokenDeposit();
-    msg.bridge_id = bridgeId;
-    msg.amount = initia.Coin.fromString("1000000uinit");
-    msg.sender = address;
-    msg.to = AppConstant.RECEIVERTESTNETADDRESS;
+    console.log("Checking Balance");
+    var balance = await queryBalance(coin);
+
+    console.log(
+      `${coin} Balance : ${balance / 1000000} ${AppConstant.getCoinByValue(
+        coin
+      )} | required ${amount} ${AppConstant.getCoinByValue(coin)}`
+    );
+
+    while (balance < amount * 1000000) {
+      console.log("Swap and check Balance");
+      if (coin == AppConstant.COIN.ETH) {
+        await swap(true, Pair.INITIAETH);
+      } else if (coin == AppConstant.COIN.USDC) {
+        await swap(true, Pair.INITIAUSDC);
+      } else if (coin == AppConstant.COIN.TUCANA) {
+        await swap(true, Pair.INITIATUC);
+      } else if (coin == AppConstant.COIN.TIA) {
+        await swap(true, Pair.INITIATIA);
+      }
+      balance = await queryBalance(coin);
+      console.log(
+        `${coin} Balance : ${balance / 1000000} ${AppConstant.getCoinByValue(
+          coin
+        )} | required ${amount} ${AppConstant.getCoinByValue(coin)}`
+      );
+    }
+
+    console.log(
+      `Sending ${amount} ${coin} to ${address} on ${AppConstant.getBridgeByValue(
+        bridgeId
+      )}`
+    );
+
+    const msg = new initia.MsgTransfer(
+      "transfer",
+      getChannel(coin),
+      initia.Coin.fromString(`${amount * 1000000}${coin}`),
+      address,
+      address,
+      new initia.Height(0, 0),
+      getTimestamp(coin)
+    );
+
+    // console.log(msg);
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send 1 Init To ${AppConstant.RECEIVERTESTNETADDRESS} From Different Layer`
+          `Successfully Send ${amount} ${AppConstant.getCoinByValue(
+            coin
+          )} To ${address} From ${AppConstant.getBridgeByValue(bridgeId)} Layer`
         );
       })
       .catch((err) => {
@@ -151,17 +201,84 @@ async function sendTokenDifferentLayer(bridgeId) {
   }
 }
 
-async function mixed_route_swap_transfer(bridgeId) {
-  console.log("BRIDGE ID" + bridgeId);
+async function sendTokenDifferentLayer(
+  bridgeId,
+  coin = AppConstant.COIN.INIT,
+  amount = 1
+) {
   try {
-    console.log(`Sending 1 init to ${AppConstant.RECEIVERTESTNETADDRESS}`);
+    console.log(
+      `Sending ${amount} ${coin} to ${address} on ${AppConstant.getBridgeByValue(
+        bridgeId
+      )}`
+    );
+    const msg = new initia.MsgInitiateTokenDeposit();
+    msg.bridge_id = bridgeId;
+    msg.amount = initia.Coin.fromString(`${amount * 1000000}${coin}`);
+    msg.sender = address;
+    msg.to = address;
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Send ${amount} ${AppConstant.getCoinByValue(
+            coin
+          )} To ${address} From ${AppConstant.getBridgeByValue(bridgeId)} Layer`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
+  let metadata;
+  let pair;
+  if (coin == AppConstant.COIN.USDC) {
+    metadata = AppConstant.USDCMETADATAADDRESS;
+    pair = Pair.INITIAUSDC;
+  } else if (coin == AppConstant.COIN.ETH) {
+    metadata = AppConstant.ETHMETADATAADRESS;
+    pair = Pair.INITIAETH;
+  } else {
+    metadata = AppConstant.INITIAMETADATAADDRESS;
+  }
+
+  console.log();
+  console.log("Checking Balance");
+  var balance = await queryBalance(coin);
+
+  console.log(
+    `${coin} Balance : ${balance / 1000000} ${AppConstant.getCoinByValue(
+      coin
+    )} | required ${amount} ${AppConstant.getCoinByValue(coin)}`
+  );
+
+  while (balance < amount * 1000000) {
+    console.log("Swap and check Balance");
+    await swap(true, pair);
+    balance = await queryBalance(coin);
+    console.log(
+      `${coin} Balance : ${balance / 1000000} ${AppConstant.getCoinByValue(
+        coin
+      )} | required ${amount} ${AppConstant.getCoinByValue(coin)}`
+    );
+  }
+  try {
+    console.log(
+      `Sending ${amount} ${coin} to ${address} ${AppConstant.getBridgeByValue(
+        bridgeId
+      )}`
+    );
     const brigeArgs = [
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIAMETADATAADDRESS)
-        .toBase64(),
+      initia.bcs.address().serialize(metadata).toBase64(),
       "AA==",
-      initia.bcs.u64().serialize(1).toBase64(),
+      initia.bcs
+        .u64()
+        .serialize(amount * 1000000)
+        .toBase64(),
     ];
     console.log(brigeArgs);
     const initToInit = await lcd.move.viewFunction(
@@ -174,30 +291,31 @@ async function mixed_route_swap_transfer(bridgeId) {
     console.log(initToInit);
 
     const msg = new initia.MsgExecute();
-    msg.function_name = "mixed_route_swap_deposit";
+    msg.function_name = "mixed_route_swap_transfer";
     msg.module_address = AppConstant.BRIDGEMODULEADDRESS;
     msg.module_name = "swap_transfer";
     msg.sender = address;
+    msg.type_args = [];
     msg.args = [
-      initia.bcs
-        .address()
-        .serialize(AppConstant.INITIAMETADATAADDRESS)
-        .toBase64(),
+      initia.bcs.address().serialize(metadata).toBase64(),
       "AA==",
-      initia.bcs.u64().serialize(1000000).toBase64(),
-      "AbguDwAAAAAA",
-      initia.bcs.u64().serialize(bridgeId).toBase64(),
-      initia.bcs.address().serialize(address).toBase64(),
+      initia.bcs.u64().serialize(initToInit).toBase64(),
+      initia.bcs.option(initia.bcs.u64()).serialize(initToInit).toBase64(),
+      // initia.bcs.u64().serialize(bridgeId).toBase64(),
+      initia.bcs.string().serialize(address).toBase64(),
+      initia.bcs.string().serialize("transfer").toBase64(),
+      initia.bcs.string().serialize("channel-31").toBase64(),
       "AA==",
     ];
 
-    console.log(AppConstant.getKey(bridgeId));
     console.log(msg);
 
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send 1 Init To ${AppConstant.RECEIVERTESTNETADDRESS} From Different Layer`
+          `Successfully Send ${amount} ${AppConstant.getCoinByValue(
+            coin
+          )} To ${address} on ${AppConstant.getBridgeByValue(bridgeId)}`
         );
       })
       .catch((err) => {
@@ -210,40 +328,11 @@ async function mixed_route_swap_transfer(bridgeId) {
 
 async function swap(oneWaySwap, pair) {
   try {
-    let liq;
-    let firstMetadata;
-    let secMetadata;
-
-    console.log("PAIR" + pair);
-
-    if (pair == Pair.INITIATIA) {
-      console.log(
-        `Swapping 1 INITIA to TIA ${
-          !oneWaySwap ? "& TIA to INITIA" : ""
-        } for Account ${address}`
-      );
-      firstMetadata = AppConstant.INITIAMETADATAADDRESS;
-      secMetadata = AppConstant.TIAMETADATAADRESS;
-      liq = AppConstant.INITIATIALIQUIDITYADDRESS;
-    } else if (pair == Pair.INITIAUSDC) {
-      console.log(
-        `Swapping 1 INITIA to USDC ${
-          !oneWaySwap ? "& USDC to INITIA" : ""
-        } for Account ${address}`
-      );
-      firstMetadata = AppConstant.INITIAMETADATAADDRESS;
-      secMetadata = AppConstant.USDCMETADATAADDRESS;
-      liq = AppConstant.INITIAUSDCLIQUIDITYADDRESS;
-    } else if (pair == Pair.INITIAETH) {
-      console.log(
-        `Swapping 1 INITIA to ETH ${
-          !oneWaySwap ? "& ETH to INITIA" : ""
-        } for Account ${address}`
-      );
-      firstMetadata = AppConstant.INITIAMETADATAADDRESS;
-      secMetadata = AppConstant.ETHMETADATAADRESS;
-      liq = AppConstant.INITIAETHLIQUIDITYADDRESS;
-    }
+    const [liq, firstMetadata, secMetadata] = generateTokenInfo(
+      pair,
+      oneWaySwap,
+      address
+    );
 
     //First
     var args = [
@@ -277,6 +366,7 @@ async function swap(oneWaySwap, pair) {
             firstSim / 1000000
           } with Pair ${pair} for Address : ${address}`
         );
+        console.log();
       })
       .catch((err) => {
         throw err;
@@ -320,6 +410,7 @@ async function swap(oneWaySwap, pair) {
         });
     }
   } catch (error) {
+    // console.log(error);
     throw error;
   }
 }
@@ -341,8 +432,8 @@ async function stakeInit() {
 
     const msg = new initia.MsgDelegate();
     msg.delegator_address = address;
-    msg.amount = initia.Coins.fromString("100000uinit");
     msg.validator_address = AppConstant.OMNINODEVALIDATORADDRESS;
+    msg.amount = initia.Coins.fromString("100000uinit");
 
     await signAndBroadcast(msg)
       .then(() => {
@@ -597,6 +688,7 @@ export {
   claimExp,
   sendToken,
   swap,
+  mixedRouteSwapTransfer,
   sendTokenDifferentLayer,
   signAndBroadcast,
   checkGas,
@@ -604,5 +696,6 @@ export {
   stakeInitUsdc,
   stakeTiaInitia,
   stakeEthInitia,
+  transferToken,
   lcd,
 };

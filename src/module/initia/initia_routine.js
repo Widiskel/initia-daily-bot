@@ -16,13 +16,40 @@ async function sendOneInitToOther() {
     await handlingError(error, "sendOneInitToOther");
   }
 }
-async function sendOneInitToOtherLayer(bridgeId) {
+async function sendTokenToOtherLayer(
+  bridgeId,
+  coin = AppConstant.COIN.INIT,
+  amount = 1,
+  method = "bridge"
+) {
   try {
-    await initia.sendTokenDifferentLayer(bridgeId);
+    if (method == "bridge") {
+      await initia.sendTokenDifferentLayer(bridgeId, coin, amount);
+    } else {
+      await initia.transferToken(bridgeId, coin, amount);
+    }
   } catch (error) {
-    await handlingError(error, "sendOneInitToOtherLayer", bridgeId);
+    await handlingError(error, "sendTokenToOtherLayer", [
+      bridgeId,
+      coin,
+      amount,
+      method,
+    ]);
   }
 }
+
+async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
+  try {
+    await initia.mixedRouteSwapTransfer(bridgeId, coin, amount);
+  } catch (error) {
+    await handlingError(error, "mixedRouteSwapTransfer", [
+      bridgeId,
+      coin,
+      amount,
+    ]);
+  }
+}
+
 async function claimExp() {
   try {
     await initia.claimExp();
@@ -58,8 +85,15 @@ async function retryContext(context, subcontext) {
   console.log(`Retrying... ${context} ${subcontext}`);
   if (context === "sendOneInitToOther") {
     await sendOneInitToOther();
-  } else if (context === "sendOneInitToOtherLayer") {
-    await sendOneInitToOtherLayer(subcontext);
+  } else if (context === "sendTokenToOtherLayer") {
+    await sendTokenToOtherLayer(
+      subcontext[0],
+      subcontext[1],
+      subcontext[2],
+      subcontext[3]
+    );
+  } else if (context === "mixedRouteSwapTransfer") {
+    await mixedRouteSwapTransfer(subcontext[0], subcontext[1], subcontext[2]);
   } else if (context === "claimExp") {
     await claimExp();
   } else if (context === "swap") {
@@ -80,37 +114,21 @@ async function handlingError(error, context, subcontext) {
         retryableErrors.push(context);
         console.error(
           `Error during ${context} : RPC error ${
-            subcontext != undefined
-              ? `(${
-                  AppConstant.getKey(subcontext) != undefined
-                    ? AppConstant.getKey(subcontext)
-                    : subcontext
-                })`
-              : ""
-          }`
+            subcontext != undefined ? `(${subcontext})` : ""
+          } ${error.response.data.message}`
         );
         await retryContext(context, subcontext);
       } else {
         console.error(
           `Error during ${context} : RPC error ${
-            subcontext != undefined
-              ? `(${
-                  AppConstant.getKey(subcontext) != undefined
-                    ? AppConstant.getKey(subcontext)
-                    : subcontext
-                })`
-              : ""
+            subcontext != undefined ? `(${subcontext})` : ""
           } Max retry limit reached`
         );
       }
     } else {
       console.error(
         `Error during ${context} ${
-          subcontext != undefined
-            ? AppConstant.getKey(subcontext) != undefined
-              ? AppConstant.getKey(subcontext)
-              : subcontext
-            : ""
+          subcontext != undefined ? `(${subcontext})` : ""
         } : `,
         error.response.data.message
       );
@@ -118,13 +136,7 @@ async function handlingError(error, context, subcontext) {
   } else {
     console.error(
       `Error during ${context} ${
-        subcontext != undefined
-          ? `(${
-              AppConstant.getKey(subcontext) != undefined
-                ? AppConstant.getKey(subcontext)
-                : subcontext
-            })`
-          : ""
+        subcontext != undefined ? `(${subcontext})` : ""
       }: `,
       error.message
     );
@@ -136,6 +148,7 @@ export {
   claimExp,
   swap,
   stakeInit,
-  sendOneInitToOtherLayer,
+  sendTokenToOtherLayer,
   resetRoutine,
+  mixedRouteSwapTransfer,
 };

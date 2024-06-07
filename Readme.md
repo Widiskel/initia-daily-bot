@@ -19,14 +19,18 @@ To run this bot you need to
 6. Send 1 Init to Other (MINIMOVE)
 7. Send 1 Init to Other (MINIWASM)
 8. Send 1 Init to Other (CIVITA)
-9. Swap 1 INIT to USDC And Swap back USDC to INIT
-10. Swap 1 INIT to TIA And Swap back TIA to INIT
-11. Swap 1 INIT to ETH And Swap back ETH to INIT
-12. Stake 0.1 INIT to Omninode
-13. Stake 0.5 USDC / INIT LP
-14. Stake 0.01 TIA / INITIA LP
-15. Stake 0.0001 ETH / INITIA LP
-16. Swap 1 INIT to USDC And Swap back USDC to INIT on TUCANA
+9. Send 1 Init to Other (MINIWASM)
+10. Send 0.1 TIA to Other (NOON) (EXPERIMENTAL)
+11. Send 1 USDC to Other (BLACKWING) (EXPERIMENTAL)
+12. Send 5 TUC to Other (TUCANA) (EXPERIMENTAL)
+13. Send 0.0001 ETH to Other (TUCANA) (EXPERIMENTAL)
+14. Swap 1 INIT to USDC
+15. Swap 1 INIT to TIA
+16. Stake 0.1 INIT to Omninode
+17. Stake 0.5 USDC / INITIA LP to Omninode
+18. Stake 0.01 TIA / INITIA LP to Omninode
+19. Stake 0.0001 ETH / INITIA LP to Omninode
+20. Swap 1 INIT to USDC on TUCANA
 
 ## Set Up
 
@@ -46,11 +50,6 @@ export { account };
 
 - To do 1 time run execute `npm run start`
 - To do scheduler run execute `npm run schedule` (EXPERIMENTAL)
-
-## NOTE
-
-the bot is sending testnet token to my initia address, you can change it on
-`src/utils/constant.js` change the `RECEIVERTESTNETADDRESS` to your address
 
 ## CONTRIBUTE
 
