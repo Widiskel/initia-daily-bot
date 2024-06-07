@@ -109,16 +109,18 @@ async function claimExp() {
 
 async function sendToken() {
   try {
-    console.log(`Sending 1 init to ${address}`);
+    console.log(`Sending 1 init to ${AppConstant.RECEIVERWALLETADDRESS}`);
     const msg = new initia.MsgSend(
       address, // sender address
-      address, // recipient address
+      AppConstant.RECEIVERWALLETADDRESS, // recipient address
       "1000000uinit" // 1 Init
     );
 
     await signAndBroadcast(msg)
       .then(() => {
-        console.log(`Successfully Send 1 Init To ${address}`);
+        console.log(
+          `Successfully Send 1 Init To ${AppConstant.RECEIVERWALLETADDRESS}`
+        );
       })
       .catch((err) => {
         throw err;
@@ -163,9 +165,9 @@ async function transferToken(
     }
 
     console.log(
-      `Sending ${amount} ${coin} to ${address} on ${AppConstant.getBridgeByValue(
-        bridgeId
-      )}`
+      `Sending ${amount} ${coin} to ${
+        AppConstant.RECEIVERWALLETADDRESS
+      } on ${AppConstant.getBridgeByValue(bridgeId)}`
     );
 
     const msg = new initia.MsgTransfer(
@@ -173,7 +175,7 @@ async function transferToken(
       getChannel(coin),
       initia.Coin.fromString(`${amount * 1000000}${coin}`),
       address,
-      address,
+      AppConstant.RECEIVERWALLETADDRESS,
       new initia.Height(0, 0),
       getTimestamp(coin)
     );
@@ -182,9 +184,9 @@ async function transferToken(
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send ${amount} ${AppConstant.getCoinByValue(
-            coin
-          )} To ${address} From ${AppConstant.getBridgeByValue(bridgeId)} Layer`
+          `Successfully Send ${amount} ${AppConstant.getCoinByValue(coin)} To ${
+            AppConstant.RECEIVERWALLETADDRESS
+          } From ${AppConstant.getBridgeByValue(bridgeId)} Layer`
         );
       })
       .catch((err) => {
@@ -202,21 +204,21 @@ async function sendTokenDifferentLayer(
 ) {
   try {
     console.log(
-      `Sending ${amount} ${coin} to ${address} on ${AppConstant.getBridgeByValue(
-        bridgeId
-      )}`
+      `Sending ${amount} ${coin} to ${
+        AppConstant.RECEIVERWALLETADDRESS
+      } on ${AppConstant.getBridgeByValue(bridgeId)}`
     );
     const msg = new initia.MsgInitiateTokenDeposit();
     msg.bridge_id = bridgeId;
     msg.amount = initia.Coin.fromString(`${amount * 1000000}${coin}`);
     msg.sender = address;
-    msg.to = address;
+    msg.to = AppConstant.RECEIVERWALLETADDRESS;
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send ${amount} ${AppConstant.getCoinByValue(
-            coin
-          )} To ${address} From ${AppConstant.getBridgeByValue(bridgeId)} Layer`
+          `Successfully Send ${amount} ${AppConstant.getCoinByValue(coin)} To ${
+            AppConstant.RECEIVERWALLETADDRESS
+          } From ${AppConstant.getBridgeByValue(bridgeId)} Layer`
         );
       })
       .catch((err) => {
@@ -252,9 +254,9 @@ async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
   }
   try {
     console.log(
-      `Sending ${amount} ${coin} to ${address} ${AppConstant.getBridgeByValue(
-        bridgeId
-      )}`
+      `Sending ${amount} ${coin} to ${
+        AppConstant.RECEIVERWALLETADDRESS
+      } ${AppConstant.getBridgeByValue(bridgeId)}`
     );
     const brigeArgs = [
       initia.bcs.address().serialize(metadata).toBase64(),
@@ -297,9 +299,9 @@ async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
     await signAndBroadcast(msg)
       .then(() => {
         console.log(
-          `Successfully Send ${amount} ${AppConstant.getCoinByValue(
-            coin
-          )} To ${address} on ${AppConstant.getBridgeByValue(bridgeId)}`
+          `Successfully Send ${amount} ${AppConstant.getCoinByValue(coin)} To ${
+            AppConstant.RECEIVERWALLETADDRESS
+          } on ${AppConstant.getBridgeByValue(bridgeId)}`
         );
       })
       .catch((err) => {
