@@ -723,6 +723,30 @@ async function claimStakingReward() {
   }
 }
 
+async function moveStake() {
+  try {
+    console.log(`Move Stakes From Omninode to Nodes.Guru`);
+    const msg = new initia.MsgBeginRedelegate(
+      address,
+      AppConstant.OMNINODEVALIDATORADDRESS,
+      AppConstant.NODESGURUVALIDATORADDRESS,
+      initia.Coin.fromString(`100000uinit`)
+    );
+
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(
+          `Successfully Move 0.1 INIT Stakes from Omninode to Nodes.Guru for Account ${address}`
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function signAndBroadcast(msg) {
   try {
     const signedTx = await wallet.createAndSignTx({
@@ -757,6 +781,7 @@ export {
   bridge,
   claimStakingReward,
   vote,
+  moveStake,
   lcd,
   address,
   key,

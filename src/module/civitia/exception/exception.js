@@ -23,7 +23,7 @@ class CivitiaException {
   async handlingError(error, context, subcontext) {
     if (error.response != undefined) {
       if (error.response.data.message.includes("rpc error")) {
-        if (error.response.data.message.includes("rpc error")) {
+        if (error.response.data.message.includes("account")) {
           console.error(
             `Error during ${context} : RPC error account not found in civitia chain ${
               this.address
@@ -35,10 +35,10 @@ class CivitiaException {
           );
         } else {
           if (
-            retryableErrors.filter((val) => val == context).length <
+            this.retryableErrors.filter((val) => val == context).length <
             this.maxRetries
           ) {
-            retryableErrors.push(context);
+            this.retryableErrors.push(context);
             console.error(
               `Error during ${context} : RPC error ${
                 subcontext != undefined

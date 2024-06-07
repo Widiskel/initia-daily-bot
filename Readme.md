@@ -9,7 +9,9 @@ To run this bot you need to
 1. Initia Testnet Account with > 30 INIT AND > 5 GAS Balance
 2. Node JS Installed
 
-## BOT FEATURE
+## BOT Feature Overview
+
+This BOT automates various tasks for a given wallet address. Below is a detailed breakdown of the features and the sequence of operations it performs.
 
 1. Send 1 Init to Other
 2. Send 1 Init to Other (BLACKWING)
@@ -23,19 +25,23 @@ To run this bot you need to
 10. Send 0.1 TIA to Other (NOON) (EXPERIMENTAL)
 11. Send 1 USDC to Other (BLACKWING) (EXPERIMENTAL)
 12. Send 5 TUC to Other (TUCANA) (EXPERIMENTAL)
-13. Send 0.0001 ETH to Other (TUCANA) (EXPERIMENTAL)
+13. Send 0.0001 ETH to Other (MINIMOVE) (EXPERIMENTAL)
 14. Swap 1 INIT to USDC
 15. Swap 1 INIT to TIA
-16. Stake 0.1 INIT to Omninode
-17. Stake 0.5 USDC / INITIA LP to Omninode
-18. Stake 0.01 TIA / INITIA LP to Omninode
-19. Stake 0.0001 ETH / INITIA LP to Omninode
-20. Request Faucet for Tucana
-21. Add 1 TUC to Tucana Liquidity PERP
-22. Swap 1 INIT to USDC on TUCANA DEX
-23. Roll Dice 3x on CIVITIA
-24. Claim Staking Reward on Omninode
-25. Vote a Proposal
+16. Swap 1 INIT to TUC
+17. Swap 1 INIT to ETH
+18. Stake 0.1 INIT to Omninode Account
+19. Stake 0.5 USDC / INITIA LP to Omninode Account
+20. Stake 0.01 TIA / INITIA LP to Omninode Account
+21. Stake 0.0001 ETH / INITIA LP to Omninode Account
+22. Request Faucet for Tucana Account
+23. Add 1 TUC to Tucana Liquidity PERP
+24. Swap 1 INIT to USDC on TUCANA Account
+25. Roll Civitia Dice 3x For Account
+26. Claim Staking Reward on Omninode
+27. Vote a proposal
+28. Move Initia Stakes from Omninode to Nodes.Guru
+29. Add Liquidity INIT/USDC on Tucana Liquidity Pool
 
 ## Set Up
 
@@ -50,6 +56,24 @@ const account = [["WALLET ADDRESS", "PRIVATE KEY"]];
 
 export { account };
 ```
+
+## Configure Bot
+
+Bot now have so many feature, but your daily faucet is only 30 INITIA. Thats why now im provide the way to configure what feature you want to use. To choose what feature you want to use
+
+1. Open `config.js`.
+2. look at.
+
+```js
+// MORE TX CONFIG
+// this.config = Array.from({ length: 28 }, (_, i) => i + 1);
+
+//FOCUS EXP CONFIG
+this.config = [14, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
+```
+
+3. the top one is config if you want to run all task.
+4. the bottom one is config that i've researched, it config that focus on quest that getting EXP. because some Transaction does'nt have EXP reward.
 
 ## Running Bot
 

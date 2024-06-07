@@ -6,7 +6,7 @@ class TucanaException {
   }
 
   resetRoutine() {
-    retryableErrors = [];
+    this.retryableErrors = [];
   }
 
   async retryContext(context, subcontext) {
@@ -15,13 +15,15 @@ class TucanaException {
       await this.tucana.swap();
     } else if (context === "tucanaPerpAddLiquidity") {
       await this.tucana.tucanaPerpAddLiquidity();
+    } else if (context === "tucanaPoolAddLiquidity") {
+      await this.tucana.tucanaPoolAddLiquidity();
     }
   }
 
   async handlingError(error, context, subcontext) {
     if (error.response != undefined) {
       if (error.response.data.message.includes("rpc error")) {
-        if (error.response.data.message.includes("rpc error")) {
+        if (error.response.data.message.includes("account")) {
           console.error(
             `Error during ${context} : RPC error account not found in tucana chain ${
               this.address
@@ -33,9 +35,10 @@ class TucanaException {
           );
         } else {
           if (
-            retryableErrors.filter((val) => val == context).length < maxRetries
+            this.retryableErrors.filter((val) => val == context).length <
+            this.maxRetries
           ) {
-            retryableErrors.push(context);
+            this.retryableErrors.push(context);
             console.error(
               `Error during ${context} : RPC error ${
                 subcontext != undefined
@@ -43,7 +46,7 @@ class TucanaException {
                   : ""
               }`
             );
-            await retryContext(context, subcontext);
+            await this.retryContext(context, subcontext);
           } else {
             console.error(
               `Error during ${context} : RPC error ${
