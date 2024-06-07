@@ -194,19 +194,28 @@ async function doQuest(walletAddress, privateKey) {
                       "20. Request Faucet for Tucana" + walletAddress
                     );
                     await getTucanaFaucet(walletAddress);
+                    console.log();
 
                     console.log(
-                      "21. Swap 1 INIT to USDC on TUCANA Account" +
+                      "21. Add 1 TUC to Tucana Liquidity PERP" + walletAddress
+                    );
+                    await tucana.tucanaPerpAddLiquidity();
+                    console.log();
+
+                    console.log(
+                      "22. Swap 1 INIT to USDC on TUCANA Account" +
                         walletAddress
                     );
                     await tucana.swap();
+                    console.log();
 
                     const civitia = new Civitia(walletAddress, privateKey);
                     console.log(
-                      "22. Roll Civitia Dice 3x For Account" + walletAddress
+                      "23. Roll Civitia Dice 3x For Account" + walletAddress
                     );
                     for (let x = 0; x < 3; x++) {
                       await civitia.rollDice();
+                      console.log();
                     }
 
                     routine.resetRoutine();

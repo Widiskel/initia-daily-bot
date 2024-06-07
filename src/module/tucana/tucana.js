@@ -1,11 +1,34 @@
 import * as initia from "@initia/initia.js";
 import { AppConstant } from "../../utils/constant.js";
 import { lcd, signAndBroadcast } from "../initia/initia.js";
+import { TucanaSigner } from "./operation/signer.js";
+import { TucanaException } from "./exception/exception.js";
 
-class Tucana {
+class Tucana extends TucanaSigner {
   constructor(address, pk) {
+    const chainId = "birdee-1";
+    const privateKeyBytes = Buffer.from(pk, "hex");
+    const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
+    const lcd = new initia.LCDClient(
+      "https://maze-rest-c9796789-107d-49ab-b6de-059724d2a91d.ue1-prod.newmetric.xyz",
+      {
+        chainId: "birdee-1",
+        gasPrices: "0.151utuc",
+        gasAdjustment: "2.0",
+      }
+    );
+    const wallet = new initia.Wallet(lcd, key);
+
+    super(wallet, lcd);
+
     this.address = address;
     this.pk = pk;
+    this.chainId = chainId;
+    this.privateKeyBytes = privateKeyBytes;
+    this.key = key;
+    this.lcd = lcd;
+    this.wallet = wallet;
+    this.exception = new TucanaException(this);
   }
 
   async swap() {
@@ -89,77 +112,45 @@ class Tucana {
           throw err;
         });
     } catch (error) {
-      this.handlingError(error, "swapTucana");
+      this.exception.handlingError(error, "swapTucana");
     }
   }
 
-  maxRetries = 3;
-  retryableErrors = [];
+  async tucanaPerpAddLiquidity() {
+    try {
+      const msg = new initia.MsgExecute();
+      msg.module_address = AppConstant.TUCANAPERPMODULEADDRESS;
+      msg.module_name = "router";
+      msg.function_name = "add_liquidity";
+      msg.sender = this.address;
+      msg.args = [
+        initia.bcs
+          .u64()
+          .serialize(1 * 1000000)
+          .toBase64(),
+        initia.bcs
+          .address()
+          .serialize(AppConstant.TUCPERPMETADATAADDRESS)
+          .toBase64(),
+        initia.bcs.address().serialize(this.address).toBase64(),
+        initia.bcs.u256().serialize(0).toBase64(),
+        initia.bcs.u256().serialize(0).toBase64(),
+      ];
 
-  resetRoutine() {
-    retryableErrors = [];
-  }
+      // console.log(msg);
 
-  async retryContext(context, subcontext) {
-    console.log(`Retrying... ${context} ${subcontext}`);
-    if (context === "swapTucana") {
-      await this.swap();
-    }
-  }
-
-  async handlingError(error, context, subcontext) {
-    if (error.response != undefined) {
-      if (error.response.data.message.includes("rpc error")) {
-        if (error.response.data.message.includes("rpc error")) {
-          console.error(
-            `Error during ${context} : RPC error account not found in tucana chain ${
-              this.address
-            }. ${
-              subcontext != undefined
-                ? `(${AppConstant.getKey(subcontext)})`
-                : ""
-            }`
+      await this.signAndBroadcast(msg)
+        .then(() => {
+          console.log(
+            `Successfully Add 1 TUC to Tucana Liquidity PERP For Address ${this.address}`
           );
-        } else {
-          if (
-            retryableErrors.filter((val) => val == context).length < maxRetries
-          ) {
-            retryableErrors.push(context);
-            console.error(
-              `Error during ${context} : RPC error ${
-                subcontext != undefined
-                  ? `(${AppConstant.getKey(subcontext)})`
-                  : ""
-              }`
-            );
-            await retryContext(context, subcontext);
-          } else {
-            console.error(
-              `Error during ${context} : RPC error ${
-                subcontext != undefined
-                  ? `(${AppConstant.getKey(subcontext)})`
-                  : ""
-              }Max retry limit reached`
-            );
-          }
-        }
-      } else {
-        console.error(
-          `Error during ${context} ${
-            subcontext != undefined ? AppConstant.getKey(subcontext) : ""
-          } : `,
-          error.response.data.message
-        );
-      }
-    } else {
-      console.error(
-        `Error during ${context} ${
-          subcontext != undefined ? `(${AppConstant.getKey(subcontext)})` : ""
-        }: `,
-        error.message
-      );
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } catch (error) {
+      this.exception.handlingError(error, "tucanaPerpAddLiquidity");
     }
   }
 }
-
 export { Tucana };

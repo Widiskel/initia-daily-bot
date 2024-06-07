@@ -18,8 +18,12 @@ import { signAndBroadcast } from "../src/module/initia/initia.js";
 //DESERIALIZE
 // console.log(
 //   initia.bcs
-//     .vector(initia.bcs.u8()) // type
-//     .parse(Uint8Array.from(Buffer.from("AbguDwAAAAAA=", "base64")))
+//     .u256() // type
+//     .parse(
+//       Uint8Array.from(
+//         Buffer.from("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==", "base64")
+//       )
+//     )
 // );
 
 // console.log(
@@ -77,19 +81,27 @@ const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
 // console.log(simulate);
 
 // const msg = new initia.MsgExecute();
-// msg.function_name = "single_asset_provide_stake";
-// msg.module_address = AppConstant.BRIDGEMODULEADDRESS;
-// msg.sender = "init1wd4phwvdx2x0sxn4xulwmjsr52z8vd92767w3x";
-// msg.module_name = "dex_utils";
+// msg.module_address = AppConstant.TUCANAPERPMODULEADDRESS;
+// msg.module_name = "router";
+// msg.function_name = "add_liquidity";
+// msg.sender = "init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp";
 // msg.args = [
-//   initia.bcs.address().serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS).toBase64(),
-//   initia.bcs.address().serialize(AppConstant.USDCMETADATAADDRESS).toBase64(),
 //   initia.bcs
 //     .u64()
-//     .serialize(0.1 * 1000000)
+//     .serialize(1 * 1000000)
 //     .toBase64(),
-//   initia.bcs.option(initia.bcs.u64()).serialize(simulate[0]).toBase64(),
-//   initia.bcs.string().serialize(simulate[1]).toBase64(),
+//   initia.bcs
+//     .address()
+//     .serialize(
+//       "0xeb85af3fac00260b3f802aa1b8443da571ab28a823ba4d3c982553b9727625df"
+//     )
+//     .toBase64(),
+//   initia.bcs
+//     .address()
+//     .serialize("init1gadzrjcp3ef90yka3sz2r6tf4wrjdhe2qr0hyp")
+//     .toBase64(),
+//   initia.bcs.u256().serialize(0).toBase64(),
+//   initia.bcs.u256().serialize(0).toBase64(),
 // ];
 
 // console.log(msg);
@@ -124,31 +136,3 @@ const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
 //     console.log(error);
 //   }
 // }
-import { LCDClient, Wallet, MnemonicKey, MsgExecute } from "@initia/initia.js";
-
-const lcd = new LCDClient(
-  "https://maze-rest-sequencer-beab9b6f-d96d-435e-9caf-5679296d8172.ue1-prod.newmetric.xyz",
-  {
-    chainId: "landlord-1",
-    gasPrices:
-      "0.151l2/afaa3f4e1717c75712f8e8073e41f051a4e516cd25daa82d948c4729388edefd",
-    gasAdjustment: "2.0",
-  }
-);
-const wallet = new Wallet(lcd, key);
-const msg = new MsgExecute(
-  key.accAddress,
-  "0x99132d33b555cd1565c59cee1e0e4ff52fbc7fb7",
-  "civitia",
-  "roll_dice"
-);
-
-const execute = async () => {
-  const signedTx = await wallet.createAndSignTx({
-    msgs: [msg],
-  });
-
-  const broadcastResult = await lcd.tx.broadcast(signedTx);
-  console.log(broadcastResult);
-};
-execute();

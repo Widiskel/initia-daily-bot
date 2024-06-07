@@ -38,7 +38,7 @@ class Civitia extends CivitiaSigner {
         "roll_dice"
       );
 
-      console.log(msg);
+      //   console.log(msg);
 
       await this.signAndBroadcast(msg)
         .then(() => {
