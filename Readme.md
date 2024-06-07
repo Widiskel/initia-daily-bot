@@ -66,7 +66,7 @@ Bot now have so many feature, but your daily faucet is only 30 INITIA. Thats why
 
 ```js
 // MORE TX CONFIG
-// this.config = Array.from({ length: 28 }, (_, i) => i + 1);
+// this.config = Array.from({ length: 29 }, (_, i) => i + 1);
 
 //FOCUS EXP CONFIG
 this.config = [14, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
