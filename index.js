@@ -5,6 +5,7 @@ import { AppConstant } from "./src/utils/constant.js";
 import { Tucana } from "./src/module/tucana/tucana.js";
 import { Pair } from "./src/utils/enum/pair.js";
 import { Civitia } from "./src/module/civitia/civitia.js";
+import { getTucanaFaucet } from "./src/repository/tucana_repo.js";
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -190,14 +191,19 @@ async function doQuest(walletAddress, privateKey) {
 
                     const tucana = new Tucana(walletAddress, privateKey);
                     console.log(
-                      "20. Swap 1 INIT to USDC on TUCANA Account" +
+                      "20. Request Faucet for Tucana" + walletAddress
+                    );
+                    await getTucanaFaucet(walletAddress);
+
+                    console.log(
+                      "21. Swap 1 INIT to USDC on TUCANA Account" +
                         walletAddress
                     );
                     await tucana.swap();
 
                     const civitia = new Civitia(walletAddress, privateKey);
                     console.log(
-                      "21. Roll Civitia Dice 3x For Account" + walletAddress
+                      "22. Roll Civitia Dice 3x For Account" + walletAddress
                     );
                     for (let x = 0; x < 3; x++) {
                       await civitia.rollDice();
