@@ -3,7 +3,10 @@ import { AppConstant } from "../../utils/constant.js";
 import { lcd, signAndBroadcast } from "../initia/initia.js";
 
 class Tucana {
-  address;
+  constructor(address, pk) {
+    this.address = address;
+    this.pk = pk;
+  }
 
   async swap() {
     try {
@@ -98,17 +101,9 @@ class Tucana {
   }
 
   async retryContext(context, subcontext) {
-    console.log(`Retrying... ${context}`);
-    if (context === "sendOneInitToOther") {
-      await sendOneInitToOther();
-    } else if (context === "sendOneInitToOtherLayer") {
-      await sendOneInitToOtherLayer(subcontext);
-    } else if (context === "claimExp") {
-      await claimExp();
-    } else if (context === "swap") {
-      await swap();
-    } else if (context === "stakeInit") {
-      await stakeInit();
+    console.log(`Retrying... ${context} ${subcontext}`);
+    if (context === "swapTucana") {
+      await this.swap();
     }
   }
 

@@ -99,9 +99,22 @@ function getTimestamp(coin) {
   }
 }
 
+function getMetadataAndPair(coin) {
+  if (coin == AppConstant.COIN.USDC) {
+    metadata = AppConstant.USDCMETADATAADDRESS;
+    pair = Pair.INITIAUSDC;
+  } else if (coin == AppConstant.COIN.ETH) {
+    metadata = AppConstant.ETHMETADATAADRESS;
+    pair = Pair.INITIAETH;
+  } else {
+    metadata = AppConstant.INITIAMETADATAADDRESS;
+  }
+}
+
 export {
   formatDateNowToCustomFormat,
   generateTokenInfo,
   getChannel,
   getTimestamp,
+  getMetadataAndPair,
 };

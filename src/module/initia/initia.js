@@ -3,9 +3,9 @@ import * as initiaRepo from "../../repository/initia_repo.js";
 import { AppConstant } from "../../utils/constant.js";
 import { Pair } from "../../utils/enum/pair.js";
 import {
-  formatDateNowToCustomFormat,
   generateTokenInfo,
   getChannel,
+  getMetadataAndPair,
   getTimestamp,
 } from "../../utils/helper.js";
 
@@ -100,12 +100,6 @@ async function claimExp() {
       initia.bcs.u64().serialize(referalPoint.referral_point).toBase64(),
     ];
     console.log(msg);
-    // [
-    //     STAGE
-    //     UNKNOWN
-    //     AMOUNT
-    //     REFERAL POINT AMMOUNT
-    // ]
 
     await signAndBroadcast(msg);
   } catch (error) {
@@ -234,17 +228,7 @@ async function sendTokenDifferentLayer(
 }
 
 async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
-  let metadata;
-  let pair;
-  if (coin == AppConstant.COIN.USDC) {
-    metadata = AppConstant.USDCMETADATAADDRESS;
-    pair = Pair.INITIAUSDC;
-  } else if (coin == AppConstant.COIN.ETH) {
-    metadata = AppConstant.ETHMETADATAADRESS;
-    pair = Pair.INITIAETH;
-  } else {
-    metadata = AppConstant.INITIAMETADATAADDRESS;
-  }
+  const [metadata, pair] = getMetadataAndPair(coin);
 
   console.log();
   console.log("Checking Balance");
@@ -510,7 +494,7 @@ async function stakeInitUsdc() {
             );
           })
           .catch((err) => {
-            console.log(err.response.data.message);
+            // console.log(err.response.data.message);
             throw err;
           });
       })
@@ -582,7 +566,7 @@ async function stakeTiaInitia() {
             );
           })
           .catch((err) => {
-            console.log(err.response.data.message);
+            // console.log(err.response.data.message);
             throw err;
           });
       })
@@ -654,7 +638,7 @@ async function stakeEthInitia() {
             );
           })
           .catch((err) => {
-            console.log(err.response.data.message);
+            // console.log(err.response.data.message);
             throw err;
           });
       })
@@ -698,4 +682,6 @@ export {
   stakeEthInitia,
   transferToken,
   lcd,
+  address,
+  key,
 };

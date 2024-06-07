@@ -49,11 +49,11 @@ import { signAndBroadcast } from "../src/module/initia/initia.js";
 //     .toBase64()
 // );
 
-const lcd = new initia.LCDClient(`https://lcd.initiation-1.initia.xyz`, {
-  chainId: "initiation-1",
-  gasPrices: `0.15${AppConstant.COIN.GAS}`,
-  gasAdjustment: "2.0",
-});
+// const lcd = new initia.LCDClient(`https://lcd.initiation-1.initia.xyz`, {
+//   chainId: "initiation-1",
+//   gasPrices: `0.15${AppConstant.COIN.GAS}`,
+//   gasAdjustment: "2.0",
+// });
 const privateKeyBytes = Buffer.from(account[0][1], "hex");
 const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
 
@@ -124,45 +124,31 @@ const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
 //     console.log(error);
 //   }
 // }
+import { LCDClient, Wallet, MnemonicKey, MsgExecute } from "@initia/initia.js";
 
-function generateRandomTimestamp() {
-  // Generate a random timestamp within one day (in microseconds)
-  const randomMicroseconds = Math.floor(Math.random() * 24 * 60 * 60 * 1000000);
+const lcd = new LCDClient(
+  "https://maze-rest-sequencer-beab9b6f-d96d-435e-9caf-5679296d8172.ue1-prod.newmetric.xyz",
+  {
+    chainId: "landlord-1",
+    gasPrices:
+      "0.151l2/afaa3f4e1717c75712f8e8073e41f051a4e516cd25daa82d948c4729388edefd",
+    gasAdjustment: "2.0",
+  }
+);
+const wallet = new Wallet(lcd, key);
+const msg = new MsgExecute(
+  key.accAddress,
+  "0x99132d33b555cd1565c59cee1e0e4ff52fbc7fb7",
+  "civitia",
+  "roll_dice"
+);
 
-  // Convert the random timestamp to microseconds
-  const timestamp = randomMicroseconds;
-
-  // Convert the timestamp to a formatted date
-  const formattedDate = timestampToDate(timestamp);
-
-  return formattedDate;
-}
-
-// Function to convert timestamp to date
-function timestampToDate(timestamp) {
-  // Convert the timestamp to milliseconds
-  const milliseconds = timestamp / 1000000;
-
-  // Create a Date object
-  const date = new Date(milliseconds);
-
-  // Format the date
-  const formattedDate = date.toLocaleString("en-US", {
-    timeZone: "UTC",
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
+const execute = async () => {
+  const signedTx = await wallet.createAndSignTx({
+    msgs: [msg],
   });
 
-  // Return the formatted date
-  return formattedDate;
-}
-
-// Generate and print three random timestamps
-console.log("Random Timestamp 1:", generateRandomTimestamp());
-console.log("Random Timestamp 2:", generateRandomTimestamp());
-console.log("Random Timestamp 3:", generateRandomTimestamp());
+  const broadcastResult = await lcd.tx.broadcast(signedTx);
+  console.log(broadcastResult);
+};
+execute();
