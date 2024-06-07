@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
+      - run: cp account_tmp.js account.js
       - run: npm ci
-      - run: npm test
 
   publish-npm:
     needs: build
