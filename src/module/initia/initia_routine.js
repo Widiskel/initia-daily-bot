@@ -103,13 +103,6 @@ async function retryContext(context, subcontext) {
   if (context === "sendOneInitToOther") {
     await sendOneInitToOther();
   } else if (context === "sendTokenToOtherLayer") {
-    if (subcontext[3] == "") {
-      await initia.sendTokenDifferentLayer(bridgeId, coin, amount);
-    } else if (subcontext[3] == "bridge") {
-      await initia.bridge(bridgeId, coin, amount);
-    } else if (subcontext[3] == "transfer") {
-      await initia.transferToken(bridgeId, coin, amount);
-    }
     await sendTokenToOtherLayer(
       subcontext[0],
       subcontext[1],
