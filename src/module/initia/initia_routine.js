@@ -59,6 +59,13 @@ async function claimStakingReward() {
     await handlingError(error, "claimStakingReward");
   }
 }
+async function vote() {
+  try {
+    await initia.vote();
+  } catch (error) {
+    await handlingError(error, "vote");
+  }
+}
 
 async function claimExp() {
   try {
@@ -117,6 +124,8 @@ async function retryContext(context, subcontext) {
     await swap(false, subcontext);
   } else if (context === "claimStakingReward") {
     await claimStakingReward();
+  } else if (context === "vote") {
+    await vote();
   } else if (context === "stakeInit") {
     if (subcontext) {
       await stakeInit(subcontext);
@@ -171,4 +180,5 @@ export {
   resetRoutine,
   mixedRouteSwapTransfer,
   claimStakingReward,
+  vote,
 };

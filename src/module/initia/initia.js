@@ -680,6 +680,29 @@ async function bridge(bridgeId, coin, ammount) {
   }
 }
 
+async function vote() {
+  try {
+    console.log(`Vote Proposal with Proposal ID 119, with Option YES`);
+    const msg = new initia.MsgVote(
+      119, //proposal id
+      address,
+      1 // vote optioin
+    );
+
+    // console.log(msg);
+
+    await signAndBroadcast(msg)
+      .then(() => {
+        console.log(`Successfully Vote a Proposal`);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function claimStakingReward() {
   try {
     console.log(`Claiming Staking reward on Omninode`);
@@ -733,6 +756,7 @@ export {
   transferToken,
   bridge,
   claimStakingReward,
+  vote,
   lcd,
   address,
   key,

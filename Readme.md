@@ -35,6 +35,7 @@ To run this bot you need to
 22. Swap 1 INIT to USDC on TUCANA DEX
 23. Roll Dice 3x on CIVITIA
 24. Claim Staking Reward on Omninode
+25. Vote a Proposal
 
 ## Set Up
 
