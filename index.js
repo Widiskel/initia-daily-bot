@@ -108,6 +108,7 @@ async function doQuest(walletAddress, privateKey) {
                     await routine.sendTokenToOtherLayer(
                       AppConstant.BridgeID.CIVITA,
                       AppConstant.COIN.INIT,
+                      1,
                       "bridge"
                     );
                     console.log();

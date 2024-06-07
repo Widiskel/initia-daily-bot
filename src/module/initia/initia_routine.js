@@ -54,7 +54,7 @@ async function mixedRouteSwapTransfer(bridgeId, coin, amount) {
 
 async function claimStakingReward() {
   try {
-    await initia.mixedRouteSwapTransfer(bridgeId, coin, amount);
+    await initia.claimStakingReward();
   } catch (error) {
     await handlingError(error, "claimStakingReward");
   }
@@ -115,6 +115,8 @@ async function retryContext(context, subcontext) {
     await claimExp();
   } else if (context === "swap") {
     await swap(false, subcontext);
+  } else if (context === "claimStakingReward") {
+    await claimStakingReward();
   } else if (context === "stakeInit") {
     if (subcontext) {
       await stakeInit(subcontext);

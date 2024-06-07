@@ -652,15 +652,17 @@ async function stakeEthInitia() {
   }
 }
 
-async function bridge(bridgeId) {
+async function bridge(bridgeId, coin, ammount) {
   try {
     console.log(`Bridging 1 init to ${AppConstant.RECEIVERWALLETADDRESS}`);
     const msg = new initia.MsgInitiateTokenDeposit(
       address, // sender address
       bridgeId,
       AppConstant.RECEIVERWALLETADDRESS, // recipient address
-      "1000000uinit" // 1 Init
+      initia.Coin.fromString(`${ammount}${coin}`)
     );
+
+    console.log(msg);
 
     await signAndBroadcast(msg)
       .then(() => {
