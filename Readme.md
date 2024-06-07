@@ -31,6 +31,7 @@ To run this bot you need to
 18. Stake 0.01 TIA / INITIA LP to Omninode
 19. Stake 0.0001 ETH / INITIA LP to Omninode
 20. Swap 1 INIT to USDC on TUCANA
+21. Roll Dice 3x on CIVITIA
 
 ## Set Up
 
