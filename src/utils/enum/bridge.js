@@ -13,6 +13,6 @@ export const BridgeID = {
         return key;
       }
     }
-    throw new Error("No such Coin with value: " + value);
+    throw new Error("No such Bridge Id with value: " + value);
   },
 };
