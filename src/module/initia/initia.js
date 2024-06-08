@@ -11,6 +11,7 @@ import { COIN } from "../../utils/enum/coin.js";
 import { InitiaSigner } from "./operation/signer.js";
 import { BridgeID } from "../../utils/enum/bridge.js";
 import { InitiaException } from "./exception/exception.js";
+import { getLatestProposal } from "../../repository/initia_repo.js";
 
 /**
  * Initia class.
@@ -700,9 +701,12 @@ class Initia extends InitiaSigner {
 
   async vote() {
     try {
-      console.log(`Vote Proposal with Proposal ID 119, with Option YES`);
+      const proposals = await getLatestProposal();
+      console.log(
+        `Vote Proposal with Proposal ID ${proposals.id} (${proposals.title}), with Option YES`
+      );
       const msg = new initia.MsgVote(
-        119, //proposal id
+        proposals.id, //proposal id
         this.address,
         1 // vote optioin
       );
@@ -711,7 +715,9 @@ class Initia extends InitiaSigner {
 
       await this.signAndBroadcast(msg)
         .then(() => {
-          console.log(`Successfully Vote a Proposal`);
+          console.log(
+            `Successfully Vote a Proposal ID ${proposals.id} (${proposals.title})`
+          );
         })
         .catch((err) => {
           throw err;
