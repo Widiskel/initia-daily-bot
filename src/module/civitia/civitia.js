@@ -1,6 +1,7 @@
 import * as initia from "@initia/initia.js";
 import { CivitiaSigner } from "./operation/signer.js";
 import { CivitiaException } from "./exception/exception.js";
+import { AppConstant } from "../../utils/constant.js";
 class Civitia extends CivitiaSigner {
   constructor(address, pk) {
     const chainId = "landlord-1";
@@ -34,7 +35,7 @@ class Civitia extends CivitiaSigner {
       console.log("Rolling dice on Civitia");
       const msg = new initia.MsgExecute(
         this.key.accAddress,
-        "0x99132d33b555cd1565c59cee1e0e4ff52fbc7fb7",
+        AppConstant.CIVITIAMODULEADDRESS,
         "civitia",
         "roll_dice"
       );

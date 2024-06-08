@@ -46,6 +46,8 @@ Bot Feature
 29. Vote a proposal on Initia
 30. Move Initia Stakes from Omninode to Nodes.Guru
 31. Add Liquidity INIT/USDC on Tucana Liquidity Pool
+32. Generate Collection on Init AI
+33. Mint NFT on Collection Assasin Holding blade NFT
 
 ## Set Up
 
@@ -61,24 +63,24 @@ const account = [["WALLET ADDRESS", "PRIVATE KEY"]];
 export { account };
 ```
 
-6. run `cp config_tmp.js config.js`
+6. run `cp user_config_tmp.js user_config.js`
 
 ## Configure Bot
 
 Bot now have so many feature, but your daily faucet is only 30 INITIA. Thats why now im provide the way to configure what feature you want to use. To choose what feature you want to use
 
-1. Open `config.js`.
+1. Open `user_config.js`.
 2. look at
 
 ```js
 // MORE TX CONFIG
-// this.config = Array.from({ length: 29 }, (_, i) => i + 1);
+// const userConfig = Array.from({ length: 29 }, (_, i) => i + 1);
 
 // FOCUS EXP CONFIG
-// this.config = [9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 24, 25, 26, 31, 27];
+// const userConfig = [9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 24, 25, 26, 31, 27];
 
 // USER CONFIG
-this.config = [
+const userConfig = [
   9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 24, 25, 26, 31, 27,
 ];
 ```

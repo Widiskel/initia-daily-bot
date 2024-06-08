@@ -1,4 +1,5 @@
 import { Civitia } from "./src/module/civitia/civitia.js";
+import { InitAi } from "./src/module/init_ai/init_ai.js";
 import { Initia } from "./src/module/initia/initia.js";
 import { Tucana } from "./src/module/tucana/tucana.js";
 import { BridgeID } from "./src/utils/enum/bridge.js";
@@ -11,61 +12,23 @@ import { Pair } from "./src/utils/enum/pair.js";
  * @class
  * Configuration class for configuring bot feature
  *
- * Bot Feature
- * 1. Send 1 Init to Other
- * 2. Send 1 Init to Other (BLACKWING)
- * 3. Send 1 Init to Other (NOON)
- * 4. Send 1 Init to Other (TUCANA)
- * 5. Send 1 Init to Other (INIT AI)
- * 6. Send 1 Init to Other (MINIMOVE)
- * 7. Send 1 Init to Other (MINIWASM)
- * 8. Send 1 Init to Other (CIVITA)
- * 9. Bridge 1 Init to (CIVITA)
- * 10. Bridge 1 Init to (TUCANA)
- * 11. Bridge 1 Init to (INIT AI)
- * 12. Send 0.1 TIA to Other (NOON) (EXPERIMENTAL)
- * 13. Send 1 USDC to Other (BLACKWING) (EXPERIMENTAL)
- * 14. Send 5 TUC to Other (TUCANA) (EXPERIMENTAL)
- * 15. Send 0.0001 ETH to Other (MINIMOVE) (EXPERIMENTAL)
- * 16. Swap 1 INIT to USDC
- * 17. Swap 1 INIT to TIA
- * 18. Swap 1 INIT to TUC
- * 19. Swap 1 INIT to ETH
- * 20. Stake 0.1 INIT to Omninode Account
- * 21. Stake 0.5 USDC / INITIA LP to Omninode Account
- * 22. Stake 0.01 TIA / INITIA LP to Omninode Account
- * 23. Stake 0.0001 ETH / INITIA LP to Omninode Account
- * 24. Request Faucet for Tucana Account
- * 25. Add 1 TUC to Tucana Liquidity PERP
- * 26. Swap 1 INIT to USDC on TUCANA Account
- * 27. Roll Civitia Dice 3x For Account
- * 28. Claim Staking Reward on Omninode
- * 29. Vote a proposal on Initia
- * 30. Move Initia Stakes from Omninode to Nodes.Guru
- * 31. Add Liquidity INIT/USDC on Tucana Liquidity Pool
- *
  * Author : Widiskel
  *
  */
 class Config {
-  constructor(initia, civitia, tucana, address) {
+  constructor(initia, civitia, tucana, initAi, userConfig, address) {
     /** @type {Civitia} */
     this.civitia = civitia;
     /** @type {Tucana} */
     this.tucana = tucana;
     /** @type {Initia} */
     this.initia = initia;
+    /** @type {InitAi} */
+    this.initAi = initAi;
     /** @type {string} */
     this.walletAddress = address;
 
-    // MORE TX CONFIG
-    // this.config = Array.from({ length: 29 }, (_, i) => i + 1);
-
-    // FOCUS EXP CONFIG
-    // this.config = [9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 24, 25, 26, 31, 27];
-
-    // USER CONFIG
-    this.config = [1];
+    this.config = userConfig;
   }
 
   isInConfig = (number) => {
@@ -287,7 +250,7 @@ class Config {
             break;
           case 24:
             console.log("24. Request Faucet for Tucana " + this.walletAddress);
-            await getTucanaFaucet(this.walletAddress);
+            await this.tucana.requestFaucet(this.walletAddress);
             console.log();
             break;
           case 25:
@@ -308,7 +271,6 @@ class Config {
             console.log(
               "27. Roll Civitia Dice 3x For Account " + this.walletAddress
             );
-
             for (let x = 0; x < 3; x++) {
               await this.civitia.rollDice();
               console.log();
@@ -334,7 +296,7 @@ class Config {
               "30. Move Initia Stakes from Omninode to Nodes.Guru for Account " +
                 this.walletAddress
             );
-            await this.initia.moveStakes();
+            await this.initia.moveStake();
             console.log();
             break;
           case 31:
@@ -343,6 +305,22 @@ class Config {
                 this.walletAddress
             );
             await this.tucana.tucanaPoolAddLiquidity();
+            console.log();
+            break;
+          case 32:
+            console.log(
+              "32. Generate Collection on Init AI for Account " +
+                this.walletAddress
+            );
+            await this.initAi.requestCreateCollection();
+            console.log();
+            break;
+          case 33:
+            console.log(
+              "33. Mint NFT on Collection Assasin Holding blade NFT Account " +
+                this.walletAddress
+            );
+            await this.initAi.requestMint();
             console.log();
             break;
           default:

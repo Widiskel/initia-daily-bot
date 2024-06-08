@@ -4,6 +4,8 @@ import { Civitia } from "./src/module/civitia/civitia.js";
 import { Initia } from "./src/module/initia/initia.js";
 import { Config } from "./config.js";
 import { COIN } from "./src/utils/enum/coin.js";
+import { InitAi } from "./src/module/init_ai/init_ai.js";
+import { userConfig } from "./user_config.js";
 
 async function doQuest(walletAddress, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -11,16 +13,19 @@ async function doQuest(walletAddress, privateKey) {
       const initia = new Initia(walletAddress, privateKey);
       const tucana = new Tucana(walletAddress, privateKey, initia);
       const civitia = new Civitia(walletAddress, privateKey);
+      const initAi = new InitAi(walletAddress, privateKey);
+
       await initia.checkGas().then(async (gasBalance) => {
         if (gasBalance / 1000000 < 5) {
           reject(
             `Account ${walletAddress} GAS Token is not enough, min balance is 5 GAS`
           );
         } else {
+          console.log(`Account ${walletAddress} Information`);
+
           await initia
             .queryBalance(COIN.INIT)
             .then(async (initBalance) => {
-              console.log(`Account ${walletAddress} Information`);
               console.log();
               console.log("Doing daily routine for Account " + walletAddress);
               console.log();
@@ -34,6 +39,8 @@ async function doQuest(walletAddress, privateKey) {
                   initia,
                   civitia,
                   tucana,
+                  initAi,
+                  userConfig,
                   walletAddress
                 );
 
@@ -44,6 +51,7 @@ async function doQuest(walletAddress, privateKey) {
                 initia.exception.resetRoutine();
                 tucana.exception.resetRoutine();
                 civitia.exception.resetRoutine();
+                initAi.exception.resetRoutine();
                 resolve(true);
               }
             })
