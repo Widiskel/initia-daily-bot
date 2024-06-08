@@ -37,8 +37,8 @@ class InitiaException {
       await this.initia.vote();
     } else if (context === "bridge") {
       await this.initia.bridge(subcontext[0], subcontext[1], subcontext[2]);
-    } else if (context === "moveStakes") {
-      await this.initia.moveStakes();
+    } else if (context === "moveStake") {
+      await this.initia.moveStake();
     } else if (context === "stake") {
       await this.initia.stake(subcontext);
     }

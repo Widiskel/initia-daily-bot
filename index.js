@@ -58,13 +58,13 @@ async function doQuest(walletAddress, privateKey) {
 
 (async () => {
   try {
-    account.forEach(async (account) => {
-      var walletAddress = account[0];
-      var privateKey = account[1];
+    for (const acc of account) {
+      var walletAddress = acc[0];
+      var privateKey = acc[1];
       await doQuest(walletAddress, privateKey).catch((error) =>
         console.error(error)
       );
-    });
+    }
   } catch (error) {
     console.error("Error During executing bot", error);
   }

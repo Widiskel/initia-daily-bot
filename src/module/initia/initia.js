@@ -750,7 +750,7 @@ class Initia extends InitiaSigner {
         this.address,
         AppConstant.OMNINODEVALIDATORADDRESS,
         AppConstant.NODESGURUVALIDATORADDRESS,
-        initia.Coin.fromString(`100000uinit`)
+        "1000000uinit"
       );
 
       await this.signAndBroadcast(msg)
