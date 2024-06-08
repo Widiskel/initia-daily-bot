@@ -308,6 +308,7 @@ class Config {
             console.log(
               "27. Roll Civitia Dice 3x For Account " + this.walletAddress
             );
+
             for (let x = 0; x < 3; x++) {
               await this.civitia.rollDice();
               console.log();

@@ -31,6 +31,7 @@ class Civitia extends CivitiaSigner {
 
   async rollDice() {
     try {
+      console.log("Rolling dice on Civitia");
       const msg = new initia.MsgExecute(
         this.key.accAddress,
         "0x99132d33b555cd1565c59cee1e0e4ff52fbc7fb7",
