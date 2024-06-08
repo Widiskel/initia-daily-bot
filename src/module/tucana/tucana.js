@@ -22,7 +22,6 @@ class Tucana extends TucanaSigner {
     const wallet = new initia.Wallet(lcd, key);
 
     super(wallet, lcd);
-    this.initia = initiaClass;
     this.address = address;
     this.pk = pk;
     this.chainId = chainId;
@@ -35,7 +34,7 @@ class Tucana extends TucanaSigner {
     this.exception = new TucanaException(this);
 
     /** @type {Initia} */
-    this.initia = initia;
+    this.initia = initiaClass;
   }
 
   async swap(oneWaySwap = false) {
@@ -89,10 +88,7 @@ class Tucana extends TucanaSigner {
             .serialize([true, true])
             .toBase64(),
           initia.bcs.bool().serialize(true).toBase64(),
-          initia.bcs
-            .u64()
-            .serialize(calculate.amount_out - 0.2 * 1000000)
-            .toBase64(),
+          initia.bcs.u64().serialize(calculate.amount_out).toBase64(),
         ];
 
         const calculateBack = await this.initia.lcd.move.viewFunction(
@@ -128,6 +124,7 @@ class Tucana extends TucanaSigner {
           });
       }
     } catch (error) {
+      console.log(error);
       this.exception.handlingError(error, "swapTucana");
     }
   }
@@ -240,7 +237,7 @@ class Tucana extends TucanaSigner {
           throw err;
         });
     } catch (error) {
-      console.log(error.response.data);
+      // console.log(error);
       this.exception.handlingError(error, "tucanaPoolAddLiquidity");
     }
   }

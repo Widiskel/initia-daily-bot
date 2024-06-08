@@ -26,7 +26,7 @@ async function getTucanaFaucet(address) {
       );
     }
   } catch (error) {
-    console.error("Error during request tucana faucet:", error);
+    console.error("Error during request tucana faucet: Internal server Error");
   }
 }
 export { getTucanaFaucet };
