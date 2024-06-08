@@ -171,7 +171,7 @@ class Tucana extends TucanaSigner {
 
   async requestFaucet() {
     try {
-      await getTucanaFaucet();
+      await getTucanaFaucet(this.address);
     } catch (error) {
       this.exception.handlingError(error, "requestFaucet");
     }
