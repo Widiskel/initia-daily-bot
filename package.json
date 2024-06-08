@@ -1,6 +1,6 @@
 {
   "name": "initia-daily-bot",
-  "version": "v1.0.3-alpha",
+  "version": "v1.0.3-stable",
   "description": "Initia Daily Routine Bot",
   "type": "module",
   "repository": {
