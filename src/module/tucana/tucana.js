@@ -236,7 +236,7 @@ class Tucana extends TucanaSigner {
         .signAndBroadcast(msg)
         .then(() => {
           console.log(
-            `Successfully Add 0.1 USDC LP to Tucana Liquidity POOL For Address ${this.address}`
+            `Successfully Add 0.01 USDC LP to Tucana Liquidity POOL For Address ${this.address}`
           );
         })
         .catch((err) => {
