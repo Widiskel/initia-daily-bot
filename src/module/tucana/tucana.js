@@ -218,7 +218,7 @@ class Tucana extends TucanaSigner {
         initia.bcs.u32().serialize(pool.tick_upper_index.bits).toBase64(), //tick upper
         initia.bcs
           .u64()
-          .serialize(0.1 * 1000000)
+          .serialize(0.01 * 1000000)
           .toBase64(),
         initia.bcs.u64().serialize(position[1]).toBase64(),
         initia.bcs.bool().serialize(true).toBase64(),
