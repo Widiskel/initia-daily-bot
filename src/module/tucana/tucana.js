@@ -88,7 +88,10 @@ class Tucana extends TucanaSigner {
             .serialize([true, true])
             .toBase64(),
           initia.bcs.bool().serialize(true).toBase64(),
-          initia.bcs.u64().serialize(calculate.amount_out).toBase64(),
+          initia.bcs
+            .u64()
+            .serialize(Math.ceil((calculate.amount_out * 50) / 100))
+            .toBase64(),
         ];
 
         const calculateBack = await this.initia.lcd.move.viewFunction(
@@ -111,10 +114,13 @@ class Tucana extends TucanaSigner {
         backMsg.type_args = [];
         backMsg.args = backArgs;
 
-        await signAndBroadcast(backMsg)
+        await this.initia
+          .signAndBroadcast(backMsg)
           .then(() => {
             console.log(
-              `Successfully Swap ${calculate.amount_out / 1000000} USDC To ${
+              `Successfully Swap ${
+                Math.ceil((calculate.amount_out * 50) / 100) / 1000000
+              } (50%) USDC To ${
                 calculateBack.amount_out / 1000000
               } INIT for Address : ${this.address}`
             );
@@ -176,6 +182,7 @@ class Tucana extends TucanaSigner {
 
   async tucanaPoolAddLiquidity() {
     try {
+      t;
       const pool = await this.initia.lcd.move.viewFunction(
         AppConstant.TUCANAPOOLMODULEADDRESS,
         "position",
