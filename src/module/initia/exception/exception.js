@@ -47,23 +47,29 @@ class InitiaException {
   async handlingError(error, context, subcontext) {
     if (error.response != undefined) {
       if (error.response.data.message.includes("rpc error")) {
-        if (
-          this.retryableErrors.filter((val) => val == context).length <
-          this.maxRetries
-        ) {
-          this.retryableErrors.push(context);
+        if (error.response.data.message.includes("redelegation")) {
           console.error(
-            `Error during ${context} : RPC error ${
-              subcontext != undefined ? `(${subcontext})` : ""
-            } ${error.response.data.message}`
+            `Error during ${context} : redelegation to this validator already in progress, first redelegation to this validator must complete before next redelegation`
           );
-          await this.retryContext(context, subcontext);
         } else {
-          console.error(
-            `Error during ${context} : RPC error ${
-              subcontext != undefined ? `(${subcontext})` : ""
-            } Max retry limit reached`
-          );
+          if (
+            this.retryableErrors.filter((val) => val == context).length <
+            this.maxRetries
+          ) {
+            this.retryableErrors.push(context);
+            console.error(
+              `Error during ${context} : RPC error ${
+                subcontext != undefined ? `(${subcontext})` : ""
+              } ${error.response.data.message}`
+            );
+            await this.retryContext(context, subcontext);
+          } else {
+            console.error(
+              `Error during ${context} : RPC error ${
+                subcontext != undefined ? `(${subcontext})` : ""
+              } Max retry limit reached`
+            );
+          }
         }
       } else {
         console.error(
