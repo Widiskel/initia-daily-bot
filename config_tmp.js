@@ -62,7 +62,7 @@ class Config {
     // this.config = Array.from({ length: 29 }, (_, i) => i + 1);
 
     // FOCUS EXP CONFIG
-    // this.config = [1, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    // this.config = [1, 9, 10, 11, 6, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
     // USER CONFIG
     this.config = [1];
