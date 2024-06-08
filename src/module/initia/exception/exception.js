@@ -57,7 +57,7 @@ class InitiaException {
               subcontext != undefined ? `(${subcontext})` : ""
             } ${error.response.data.message}`
           );
-          await retryContext(context, subcontext);
+          await this.retryContext(context, subcontext);
         } else {
           console.error(
             `Error during ${context} : RPC error ${
