@@ -182,7 +182,6 @@ class Tucana extends TucanaSigner {
 
   async tucanaPoolAddLiquidity() {
     try {
-      t;
       const pool = await this.initia.lcd.move.viewFunction(
         AppConstant.TUCANAPOOLMODULEADDRESS,
         "position",
@@ -244,7 +243,7 @@ class Tucana extends TucanaSigner {
           throw err;
         });
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       this.exception.handlingError(error, "tucanaPoolAddLiquidity");
     }
   }
