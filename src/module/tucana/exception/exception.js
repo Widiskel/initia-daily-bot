@@ -21,6 +21,8 @@ class TucanaException {
       await this.tucana.tucanaPerpAddLiquidity();
     } else if (context === "tucanaPoolAddLiquidity") {
       await this.tucana.tucanaPoolAddLiquidity();
+    } else if (context === "requestFaucet") {
+      await this.tucana.requestFaucet();
     }
   }
 

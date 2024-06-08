@@ -287,7 +287,7 @@ class Config {
             break;
           case 24:
             console.log("24. Request Faucet for Tucana " + this.walletAddress);
-            await getTucanaFaucet(this.walletAddress);
+            await this.tucana.requestFaucet(this.walletAddress);
             console.log();
             break;
           case 25:

@@ -3,6 +3,7 @@ import { AppConstant } from "../../utils/constant.js";
 import { Initia } from "../initia/initia.js";
 import { TucanaSigner } from "./operation/signer.js";
 import { TucanaException } from "./exception/exception.js";
+import { getTucanaFaucet } from "../../repository/tucana_repo.js";
 
 class Tucana extends TucanaSigner {
   /** @param {Initia} initiaClass */
@@ -168,9 +169,17 @@ class Tucana extends TucanaSigner {
     }
   }
 
+  async requestFaucet() {
+    try {
+      await getTucanaFaucet();
+    } catch (error) {
+      this.exception.handlingError(error, "requestFaucet");
+    }
+  }
+
   async tucanaPoolAddLiquidity() {
     try {
-      const pool = await lcd.move.viewFunction(
+      const pool = await this.initia.lcd.move.viewFunction(
         AppConstant.TUCANAPOOLMODULEADDRESS,
         "position",
         "position_metadata",
@@ -182,7 +191,7 @@ class Tucana extends TucanaSigner {
             .toBase64(),
         ]
       );
-      const position = await lcd.move.viewFunction(
+      const position = await this.initia.lcd.move.viewFunction(
         AppConstant.TUCANAPOOLMODULEADDRESS,
         "pool",
         "get_position_amounts",
@@ -220,7 +229,8 @@ class Tucana extends TucanaSigner {
 
       // console.log(msg);
 
-      await signAndBroadcast(msg)
+      await this.initia
+        .signAndBroadcast(msg)
         .then(() => {
           console.log(
             `Successfully Add 0.1 USDC LP to Tucana Liquidity POOL For Address ${this.address}`
