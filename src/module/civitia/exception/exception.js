@@ -2,10 +2,11 @@ import { AppConstant } from "../../../utils/constant.js";
 import { Civitia } from "../civitia.js";
 
 class CivitiaException {
-  maxRetries = 3;
-  retryableErrors = [];
-  civitia;
   constructor(civitia) {
+    this.maxRetries = 3;
+    this.retryableErrors = [];
+
+    /** @type {Civitia} */
     this.civitia = civitia;
   }
 

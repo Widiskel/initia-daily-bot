@@ -1,4 +1,5 @@
 import { AppConstant } from "./../utils/constant.js";
+import { CHANNEL } from "./enum/channel.js";
 import { Pair } from "./enum/pair.js";
 
 function formatDateNowToCustomFormat() {
@@ -79,13 +80,13 @@ function generateTokenInfo(pair, oneWaySwap, address) {
 
 function getChannel(coin) {
   if (coin == AppConstant.COIN.USDC) {
-    return AppConstant.CHANNEL.USDC;
+    return CHANNEL.USDC;
   } else if (coin == AppConstant.COIN.TIA) {
-    return AppConstant.CHANNEL.TIA;
+    return CHANNEL.TIA;
   } else if (coin == AppConstant.COIN.TUCANA) {
-    return AppConstant.CHANNEL.TUCANA;
+    return CHANNEL.TUCANA;
   } else if (coin == AppConstant.COIN.ETH) {
-    return AppConstant.CHANNEL.ETH;
+    return CHANNEL.ETH;
   }
 }
 

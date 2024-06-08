@@ -1,8 +1,9 @@
-const Pair = {
+export const Pair = {
   INITIAUSDC: "INITIA/USDC",
   INITIATIA: "INITIA/TIA",
   INITIAETH: "INITIA/ETH",
   INITIATUC: "INITIA/TUCANA",
+  INIT: "INIT",
 
   getKey: function (value) {
     for (const key in this) {
@@ -13,5 +14,3 @@ const Pair = {
     throw new Error("No such pair with value: " + value);
   },
 };
-
-export { Pair };

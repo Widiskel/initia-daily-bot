@@ -1,11 +1,12 @@
 import * as initia from "@initia/initia.js";
 import { AppConstant } from "../../utils/constant.js";
-import { lcd, signAndBroadcast } from "../initia/initia.js";
+import { Initia } from "../initia/initia.js";
 import { TucanaSigner } from "./operation/signer.js";
 import { TucanaException } from "./exception/exception.js";
 
 class Tucana extends TucanaSigner {
-  constructor(address, pk) {
+  /** @param {Initia} initiaClass */
+  constructor(address, pk, initiaClass) {
     const chainId = "birdee-1";
     const privateKeyBytes = Buffer.from(pk, "hex");
     const key = new initia.RawKey(Uint8Array.from(privateKeyBytes));
@@ -13,14 +14,14 @@ class Tucana extends TucanaSigner {
       "https://maze-rest-c9796789-107d-49ab-b6de-059724d2a91d.ue1-prod.newmetric.xyz",
       {
         chainId: "birdee-1",
-        gasPrices: "0.151utuc",
+        gasPrices: "0.15utuc",
         gasAdjustment: "2.0",
       }
     );
     const wallet = new initia.Wallet(lcd, key);
 
     super(wallet, lcd);
-
+    this.initia = initiaClass;
     this.address = address;
     this.pk = pk;
     this.chainId = chainId;
@@ -28,7 +29,12 @@ class Tucana extends TucanaSigner {
     this.key = key;
     this.lcd = lcd;
     this.wallet = wallet;
+
+    /** @type {TucanaException} */
     this.exception = new TucanaException(this);
+
+    /** @type {Initia} */
+    this.initia = initia;
   }
 
   async swap(oneWaySwap = false) {
@@ -41,7 +47,7 @@ class Tucana extends TucanaSigner {
         initia.bcs.u64().serialize(100000).toBase64(),
       ];
 
-      const calculate = await lcd.move.viewFunction(
+      const calculate = await this.initia.lcd.move.viewFunction(
         AppConstant.TUCANAMODULEADDRESS,
         "router",
         "calculate_multi_hops_swap_result",
@@ -60,7 +66,8 @@ class Tucana extends TucanaSigner {
       msg.args = args;
 
       // console.log(msg);
-      await signAndBroadcast(msg)
+      await this.initia
+        .signAndBroadcast(msg)
         .then(() => {
           console.log(
             `Successfully Swap 1 Initia To ${
@@ -87,7 +94,7 @@ class Tucana extends TucanaSigner {
             .toBase64(),
         ];
 
-        const calculateBack = await lcd.move.viewFunction(
+        const calculateBack = await this.initia.lcd.move.viewFunction(
           AppConstant.TUCANAMODULEADDRESS,
           "router",
           "calculate_multi_hops_swap_result",

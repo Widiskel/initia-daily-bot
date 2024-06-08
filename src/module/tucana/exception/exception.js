@@ -1,7 +1,11 @@
+import { Tucana } from "../tucana.js";
+
 class TucanaException {
-  maxRetries = 3;
-  retryableErrors = [];
   constructor(tucana) {
+    this.maxRetries = 3;
+    this.retryableErrors = [];
+
+    /** @type {Tucana} */
     this.tucana = tucana;
   }
 

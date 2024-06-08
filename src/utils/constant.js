@@ -47,60 +47,6 @@ class AppConstant {
     "initvaloper1m07fvq8flvc3ltjlgk30nznfdjf4hx9nwcpdy9";
   static NODESGURUVALIDATORADDRESS =
     "initvaloper1x7j4d9ccds889yxecuylp803d0h6lrfnv30k9y";
-
-  static COIN = {
-    GAS: "move/944f8dd8dc49f96c25fea9849f16436dcfa6d564eec802f3ef7f8b3ea85368ff",
-    ETHINITLP:
-      "move/a2b0d3c8e53e379ede31f3a361ff02716d50ec53c6b65b8c48a81d5b06548200",
-    TIAINITLP:
-      "move/b134ae6786f10ef74294e627d2519b63b7c742a6735f98682929fea9a84744d2",
-    USDCINITLP:
-      "move/dbf06c48af3984ec6d9ae8a9aa7dbb0bb1e784aa9b8c4a5681af660cf8558d7d",
-    INIT: "uinit",
-    USDC: "uusdc",
-    ETH: "ueth",
-    TIA: "utia",
-    TUCANA:
-      "ibc/276C63284D960E3E4D76AEFC9A8BA338BAD24E30530C7C95E7EFC4D250D4E23D",
-  };
-
-  static BridgeID = {
-    MINIMOVE: 1,
-    MINIWASM: 2,
-    INITAI: 6,
-    BLACKWING: 8,
-    TUCANA: 14,
-    NOON: 17,
-    CIVITA: 24,
-  };
-
-  static CHANNEL = {
-    USDC: "channel-13",
-    TIA: "channel-31",
-    TUCANA: "channel-25",
-    ETH: "channel-0",
-  };
-
-  static getKey(object, value) {
-    return Object.keys(object).find((key) => object[key] === value);
-  }
-
-  static getCoinByValue(value) {
-    for (const coin in this.COIN) {
-      if (this.COIN[coin] === value) {
-        return coin;
-      }
-    }
-    return value;
-  }
-  static getBridgeByValue(value) {
-    for (const bridge in this.BridgeID) {
-      if (this.BridgeID[bridge] === value) {
-        return bridge;
-      }
-    }
-    return value;
-  }
 }
 
 export { AppConstant };
