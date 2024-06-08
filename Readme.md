@@ -1,4 +1,4 @@
-# INITIA DAILY ROUTING BOT
+# INITIA DAILY ROUTINE BOT
 
 Initia testnet daily routine bot
 
