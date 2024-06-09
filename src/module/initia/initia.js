@@ -756,7 +756,7 @@ class Initia extends InitiaSigner {
         this.address,
         AppConstant.OMNINODEVALIDATORADDRESS,
         AppConstant.NODESGURUVALIDATORADDRESS,
-        "1000000uinit"
+        `100000uinit`
       );
 
       await this.signAndBroadcast(msg)
