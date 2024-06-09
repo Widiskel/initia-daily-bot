@@ -390,29 +390,17 @@ class Initia extends InitiaSigner {
 
   async stakeInit() {
     try {
-      console.log("Stake 0.1 INITIA to OmniNode for Account " + this.address);
+      console.log("Stake 1 INITIA to OmniNode for Account " + this.address);
       // Args INITIA > USDC
-      var args = [
-        initia.bcs
-          .address()
-          .serialize(AppConstant.INITIAUSDCLIQUIDITYADDRESS)
-          .toBase64(),
-        initia.bcs
-          .address()
-          .serialize(AppConstant.INITIAMETADATAADDRESS)
-          .toBase64(),
-        initia.bcs.u64().serialize(1000000).toBase64(), // 1 INITIA
-      ];
-
       const msg = new initia.MsgDelegate();
       msg.delegator_address = this.address;
       msg.validator_address = AppConstant.OMNINODEVALIDATORADDRESS;
-      msg.amount = initia.Coins.fromString("100000uinit");
+      msg.amount = initia.Coins.fromString("1000000uinit");
 
       await this.signAndBroadcast(msg)
         .then(() => {
           console.log(
-            `Successfully Stake 0.1 Initia to OmniNode for Address : ${this.address}`
+            `Successfully Stake 1 Initia to OmniNode for Address : ${this.address}`
           );
         })
         .catch((err) => {

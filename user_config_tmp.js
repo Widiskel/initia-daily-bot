@@ -21,7 +21,7 @@
  * 17. Swap 1 INIT to TIA
  * 18. Swap 1 INIT to TUC
  * 19. Swap 1 INIT to ETH
- * 20. Stake 0.1 INIT to Omninode Account
+ * 20. Stake 1 INIT to Omninode Account
  * 21. Stake 0.5 USDC / INITIA LP to Omninode Account
  * 22. Stake 0.01 TIA / INITIA LP to Omninode Account
  * 23. Stake 0.0001 ETH / INITIA LP to Omninode Account
@@ -31,7 +31,7 @@
  * 27. Roll Civitia Dice 3x For Account
  * 28. Claim Staking Reward on Omninode
  * 29. Vote a proposal on Initia
- * 30. Move Initia Stakes from Omninode to Nodes.Guru
+ * 30. Move 0.1 Initia Stakes from Omninode to Nodes.Guru
  * 31. Add Liquidity INIT/USDC on Tucana Liquidity Pool
  * 32. Generate Collection on Init AI
  * 33. Mint NFT on Collection Assasin Holding blade NFT
