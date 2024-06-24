@@ -22,5 +22,6 @@ export const COIN = {
         return this.UNKNOWN;
       }
     }
+    return this.UNKNOWN;
   },
 };
