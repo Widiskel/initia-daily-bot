@@ -12,14 +12,15 @@ export const COIN = {
   TIA: "utia",
   TUCANA:
     "ibc/276C63284D960E3E4D76AEFC9A8BA338BAD24E30530C7C95E7EFC4D250D4E23D",
-  UNKNOWN: "unknown",
+  UNKNOWN: "UNKNOWN",
 
   getCoinByValue: function (value) {
     for (const key in this) {
       if (this.hasOwnProperty(key) && this[key] === value) {
         return key;
+      } else {
+        return this.UNKNOWN;
       }
     }
-    return this.UNKNOWN;
   },
 };

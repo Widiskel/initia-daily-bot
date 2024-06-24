@@ -50,7 +50,7 @@ class Civitia extends CivitiaSigner {
           throw err;
         });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       this.exception.handlingError(error, "rollDice");
     }
   }

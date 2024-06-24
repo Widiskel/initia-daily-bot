@@ -21,14 +21,14 @@
  * 17. Swap 1 INIT to TIA
  * 18. Swap 1 INIT to TUC
  * 19. Swap 1 INIT to ETH
- * 20. Stake 1 INIT to Omninode Account
- * 21. Stake 0.5 USDC / INITIA LP to Omninode Account
- * 22. Stake 0.01 TIA / INITIA LP to Omninode Account
- * 23. Stake 0.0001 ETH / INITIA LP to Omninode Account
- * 24. Request Faucet for Tucana Account
+ * 20. Stake 1 INIT to Omninode
+ * 21. Stake 0.5 USDC / INITIA LP to Omninode
+ * 22. Stake 0.01 TIA / INITIA LP to Omninode
+ * 23. Stake 0.0001 ETH / INITIA LP to Omninode
+ * 24. Request Faucet for Tucana
  * 25. Add 1 TUC to Tucana Liquidity PERP
- * 26. Swap 1 INIT to USDC on TUCANA Account
- * 27. Roll Civitia Dice 3x For Account
+ * 26. Swap 1 INIT to USDC on TUCANA
+ * 27. Roll Civitia Dice 3x
  * 28. Claim Staking Reward on Omninode
  * 29. Vote a proposal on Initia
  * 30. Move 0.1 Initia Stakes from Omninode to Nodes.Guru
@@ -48,8 +48,8 @@
 
 // USER CONFIG
 const userConfig = [
-  9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 24, 25, 26, 31, 27, 32,
-  33,
+  1, 9, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 24, 25, 26, 31, 27,
+  32, 33,
 ];
 
 export { userConfig };
