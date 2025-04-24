@@ -112,6 +112,6 @@ Feel free to fork and contribute adding more feature thanks.
 want to support me for creating another bot ?
 buy me a coffee on
 
-EVM : `0x0fd08d2d42ff086bf8c6d057d02d802bf217559a`
+EVM : `0x3fe6a02ab20de8bf34fefc106d72d7094c8c4404
 
 SOLANA : `3tE3Hs7P2wuRyVxyMD7JSf8JTAmEekdNsQWqAnayE1CN`
